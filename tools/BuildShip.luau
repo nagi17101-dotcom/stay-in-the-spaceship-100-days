@@ -203,6 +203,7 @@ station(bridge, "BR-SignalTriangulator", "SignalTriangulator", "Comms", "Signal 
 station(bridge, "BR-ThrusterMatrix", "ThrusterMatrix", "Drive", "Thruster Matrix", Vector3.new(13.5, Y + 2, -40), Vector3.new(-1, 0, 0))
 station(shop, "WS-GravityStabilizer", "GravityStabilizer", "Cargo", "Gravity Stabilizer", Vector3.new(28, Y + 2, -9.8), Vector3.new(0, 0, 1))
 station(shop, "WS-DroneSalvage", "DroneSalvage", "Cargo", "Drone Bay", Vector3.new(46.3, Y + 2, 0), Vector3.new(-1, 0, 0))
+station(shop, "WS-FabricatorAssembly", "FabricatorAssembly", "Cargo", "Fabricator", Vector3.new(43, Y + 2, 2.6), Vector3.new(0, 0, -1))
 station(bridge, "BR-ShieldResonance", "ShieldResonance", "Shields", "Shield Resonance", Vector3.new(10, Y + 2, -47.5), Vector3.new(0, 0, 1))
 
 -- Salvage points + emergency quick actions

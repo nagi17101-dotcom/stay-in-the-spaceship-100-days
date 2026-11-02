@@ -396,6 +396,8 @@ function RunCoordinator.Start()
 				return run.director:ForceSpawn(a)
 			elseif cmd == "director" then
 				return run.director:Status() .. " | objective: " .. tostring(run.director:Objective())
+			elseif cmd == "day" then -- jump the day counter (tier / minDay tests)
+				run.day.day = a
 			elseif cmd == "skip" then
 				run.day:SkipPhase()
 			elseif cmd == "fail" then

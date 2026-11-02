@@ -49,3 +49,14 @@ Shield mechanic: when shield output < `Dependencies.ShieldSafe` (50), the hull t
 - **Passive wear** (ShipStateService): below `Dependencies.ShieldSafe` (50) hull loses `deficit · ShieldHullWear(0.15) · wf` per second.
 - **Station**: single console on the Bridge (`BR-ShieldResonance`); Bridge room lighting follows Shields, Junction follows Hull only.
 - **Incidents**: DebrisBarrage (hull + shields) and IonSquall (shields); Feasibility rejects them when they would cripple Shields.
+
+## Fabricator Assembly (M11)
+| Item | Detail |
+|---|---|
+| Station | Workshop `WS-FabricatorAssembly` (System attr Cargo, `AlwaysAvailable`) |
+| Blueprint | `Config.Fabricator.Blueprints`; server `Context(run)` picks the most damaged system (< `NeedBelow` 90) whose recipe is affordable; `CanOpen` explains "nothing to fabricate" vs "not enough materials" |
+| Puzzle | sockets (connector, Ø tolerance, `needs` = DAG) + parts (connector, Ø, kg); decoys out of tolerance; Advanced: heavy twin breaks `maxLoad`, optional socket R |
+| Action | `{ steps = { {socket, part}, ... } }` in mount order; `Rules.Evaluate` = order + fit + completeness + stress test |
+| Commit hook (new, generic) | `mg.Commit(run, player, pub, action, taskId)` runs after `Validate`, before repair; returns false → task FAILED/closed. Fabricator: `TryDebit(cost, "fab:"..taskId)` then `ApplyRepair(bp.system, amount, "fab:"..taskId)` |
+| Generate signature | `Generate(tier, seed, ctx?)`; `ctx` only when the module defines `Context(run)` |
+| Director | `ComponentWear` (day ≥ 8, Power −18 / Cooling −12): Fabricator or PowerBus |

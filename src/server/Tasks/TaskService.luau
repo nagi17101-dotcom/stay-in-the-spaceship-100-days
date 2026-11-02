@@ -71,7 +71,7 @@ local function openTask(player: Player, station: Model)
 
 	local seed = run.rng:NextInteger(1, 2147483646)
 	local tier = tierForDay(run.day.day)
-	local pub, priv = mg.Generate(tier, seed)
+	local pub, priv = mg.Generate(tier, seed, mg.Context and mg.Context(run))
 	if not mg.CheckSolvable(pub, priv) then
 		warn(("[Task] unsolvable %s seed=%d tier=%s — skipped"):format(mg.Id, seed, tier))
 		return
@@ -118,6 +118,13 @@ local function onSubmit(player: Player, taskId: any, action: any)
 	task.attempts += 1
 	local ok, reason, message = task.mg.Validate(task.pub, task.priv, action)
 	if ok then
+		if task.mg.Commit then -- side effects that can still fail (e.g. materials spent meanwhile): fail closed
+			local cok, creason, cmsg = task.mg.Commit(run, player, task.pub, action, task.taskId)
+			if not cok then
+				release(task, "FAILED")
+				return result(task, { ok = false, closed = true, reason = creason, message = cmsg })
+			end
+		end
 		if task.mg.RepairAmount > 0 then
 			run.ship:ApplyRepair(task.mg.System, task.mg.RepairAmount, task.taskId) -- exactly-once by txId
 		end

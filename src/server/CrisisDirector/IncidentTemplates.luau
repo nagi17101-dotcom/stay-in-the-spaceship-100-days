@@ -97,6 +97,17 @@ return {
 	},
 
 	{
+		id = "ComponentWear", title = "Worn couplings", severity = "Major", cost = 1, minDay = 8, weight = 2, cooldown = 150,
+		sectorWeight = { ["Outer Freight Belt"] = 2 },
+		alert = "Worn couplings failing on the power and coolant lines!",
+		effects = { { system = "Power", field = "health", amount = -18 }, { system = "Cooling", field = "health", amount = -12 } },
+		steps = {
+			{ objective = "WORN COUPLINGS: fabricate a replacement part (Workshop Fabricator) or reroute at the Power Bus.",
+				paths = { { kind = "task", id = "FabricatorAssembly" }, { kind = "task", id = "PowerBus" } } },
+		},
+		escalate = { every = 35, max = 2, text = "Couplings degrading — power line losing load.", effects = { { system = "Power", field = "health", amount = -6 } } },
+	},
+	{
 		id = "DebrisBarrage", title = "Debris barrage", severity = "Major", cost = 1, minDay = 2, weight = 2, cooldown = 150,
 		sectorWeight = { ["Outer Freight Belt"] = 2 },
 		alert = "Debris barrage! Hull impacts and shield emitters stressed.",

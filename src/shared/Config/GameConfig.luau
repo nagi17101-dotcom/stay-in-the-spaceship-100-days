@@ -75,6 +75,18 @@ Config.QuickActions = {
 	HullPatch = { label = "Hull Patch Kit", cost = { ScrapAlloy = 2, SealantFoam = 1 }, system = "Hull", field = "health", amount = 25, cooldown = 8 },
 }
 
+-- M11 Fabricator blueprints: crafted part is installed immediately (materials debited once per task id)
+Config.Fabricator = {
+	Blueprints = {
+		{ id = "ConductiveJumper", name = "Conductive Jumper", system = "Power", amount = 30, cost = { ScrapAlloy = 1, ConductiveFilament = 2 } },
+		{ id = "CoolantBypass", name = "Coolant Bypass Kit", system = "Cooling", amount = 30, cost = { CoolantCartridge = 1, ConductiveFilament = 1 } },
+		{ id = "O2FilterUnit", name = "O2 Filter Unit", system = "Oxygen", amount = 30, cost = { FilterMembrane = 1, ScrapAlloy = 1 } },
+		{ id = "StructuralBracket", name = "Structural Bracket", system = "Hull", amount = 20, cost = { ScrapAlloy = 2 } },
+	},
+	Upgrade = { cost = { ScrapAlloy = 1 }, amount = 15 }, -- Advanced: optional reinforcement socket
+	NeedBelow = 90, -- a blueprint is offered only for systems under this health
+}
+
 Config.Rewards = {
 	BaseXP = 10, TaskXP = 15, SalvageXP = 5, ActionXP = 5,
 	CrewBonus = { ScrapAlloy = 1 },

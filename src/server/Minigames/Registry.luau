@@ -11,5 +11,5 @@ return {
 	GravityStabilizer = require(folder.GravityStabilizer),
 	DroneSalvage = require(folder.DroneSalvage),
 	ShieldResonance = require(folder.ShieldResonance),
-	ShieldResonance = require(folder.ShieldResonance),
+	FabricatorAssembly = require(folder.FabricatorAssembly),
 }
