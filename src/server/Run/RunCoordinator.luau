@@ -18,6 +18,7 @@ local SalvageService = require(Server.World.SalvageService)
 local QuickActionService = require(Server.World.QuickActionService)
 local LobbyPartyService = require(Server.LobbyMatchmaking.LobbyPartyService)
 local CrisisDirector = require(Server.CrisisDirector.Director)
+local ProfileService = require(Server.Progression.ProfileService)
 
 local N = Remotes.Names
 local RunCoordinator = {}
@@ -161,6 +162,9 @@ local function onFailed()
 		returnIn = Config.Lobby.ReturnToLobbyAfterLoss,
 	})
 	print(("[Run %s] SHIP LOST on day %d (%s)"):format(string.sub(run.runId, 1, 8), run.day.day, reason))
+	for _, p in ipairs(crewPlayers()) do
+		ProfileService.Grant(p, "runend:" .. run.runId, { stats = { runs = 1, shipsLost = 1 } })
+	end
 	local token = run.lossToken
 	task.delay(Config.Lobby.ReturnToLobbyAfterLoss, function()
 		if run.lossToken == token and run.day.phase == "Failed" then RunCoordinator.ReturnToLobby("auto after loss") end
@@ -171,6 +175,7 @@ function RunCoordinator.GetRun() return run end
 
 function RunCoordinator.Start()
 	Remotes.Init()
+	ProfileService.Start()
 	local seed = math.floor(os.clock() * 1000) % 2147483647
 	run = {
 		runId = HttpService:GenerateGUID(false),
@@ -207,6 +212,13 @@ function RunCoordinator.Start()
 			if common then
 				for player, mine in pairs(personal) do
 					if player.Parent then
+						-- grant id is unique per run/day: rejoining or re-closing a day never pays twice
+						ProfileService.Grant(player, ("day:%s:%d"):format(run.runId, info.day), {
+							xp = mine.xp,
+							stats = { daysSurvived = 1, repairs = mine.tasks, salvage = mine.salvage, actions = mine.actions },
+							bestDay = { difficulty = run.difficulty, day = info.day },
+						})
+						mine.saved = ProfileService.IsPersistent(player)
 						Remotes.Get(N.DaySummary):FireClient(player, { common = common, you = mine, nextAt = run.day.phaseEndsAt })
 					end
 				end
@@ -318,6 +330,11 @@ function RunCoordinator.Start()
 				for _, st in ipairs(CollectionService:GetTagged("QuickAction")) do
 					if st:GetAttribute("ActionId") == a then QuickActionService.Use(Players:GetPlayers()[1], st) end
 				end
+			elseif cmd == "grant" then -- idempotency check: same grant id twice
+				local p = Players:GetPlayers()[1]
+				local first = ProfileService.Grant(p, a, { xp = b })
+				local second = ProfileService.Grant(p, a, { xp = b })
+				return ("first=%s second=%s"):format(tostring(first), tostring(second))
 			elseif cmd == "incident" then
 				return run.director:ForceSpawn(a)
 			elseif cmd == "director" then

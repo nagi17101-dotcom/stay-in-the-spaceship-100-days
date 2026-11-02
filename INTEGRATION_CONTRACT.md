@@ -31,3 +31,8 @@ Shared crew materials via `InventoryService` only: `TryDebit(cost, txId)` / `Cre
 - `PartyState`: `{ minPlayers, maxPlayers, party?{leaderId, members[{userId,name,ready,leader}], difficulty, countdownEndsAt?}, run{active, day, phase, crew[userId]} }`.
 - `run.crew[userId]` gates every ship interaction (`InteractionGuard.IsCrew`). Disconnected crew stay in `run.crew` and are placed aboard on rejoin.
 - World: `Workspace.Lobby.LobbySpawn` (only enabled spawn), `Workspace.Lobby.PartyDisplay.SurfaceGui.Label`.
+
+## Progression (ProfileService)
+- Rewards only via `ProfileService.Grant(player, grantId, { xp?, stats?, bestDay? = {difficulty, day} })`. grantId must be globally unique and deterministic: `day:<runId>:<day>`, `runend:<runId>`, later `ach:<id>`, `purchase:<receiptId>`. Same id is applied at most once per profile (last 400 ids kept in the profile).
+- Never write profiles outside ProfileStore (UpdateAsync + session lock). A failed or session-only save must never be shown as saved.
+- Schema changes: bump `ProfileSchema.VERSION`, add a step in `Migrate`, keep unknown fields.

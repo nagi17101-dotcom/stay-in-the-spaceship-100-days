@@ -48,7 +48,7 @@ function Overlays:ShowDaySummary(data)
 	row(p, 4, "Salvage recovered", tostring(c.crewSalvage))
 	row(p, 5, "Ship condition", c.condition .. "%", c.condition < 50 and Theme.Amber or Theme.Teal)
 	row(p, 6, "Crew supplies", "+" .. c.crewReward, Theme.Teal)
-	row(p, 7, "Your XP", ("+%d  (run %d)"):format(you.xp, you.totalXp), Theme.Amber)
+	row(p, 7, "Your XP", ("+%d  (run %d)%s"):format(you.xp, you.totalXp, you.saved and " · added to profile" or " · not saved"), Theme.Amber)
 
 	local delay = math.clamp((data.nextAt or 0) - workspace:GetServerTimeNow(), 3, 10)
 	task.delay(delay, function() if self.summary == p then self:HideDaySummary() end end)

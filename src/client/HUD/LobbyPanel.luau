@@ -51,6 +51,28 @@ function LobbyPanel.new(playerGui: PlayerGui, send: (string, any?) -> ())
 	return self
 end
 
+function LobbyPanel:SetProfile(s)
+	if not self.profile then
+		local p = C.panel({ AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(0, 16, 1, -16), Size = UDim2.new(0, 300, 0, 58), Parent = self.gui })
+		C.make("UIPadding", { PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12), PaddingTop = UDim.new(0, 8), Parent = p })
+		self.profileTitle = C.label({ Size = UDim2.new(1, 0, 0, 16), Font = Theme.FontBold, TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, Parent = p })
+		local _, fill = C.bar({ Position = UDim2.fromOffset(0, 20), Size = UDim2.new(1, 0, 0, 4), Parent = p })
+		self.profileFill = fill
+		self.profileLine = C.label({ Position = UDim2.fromOffset(0, 28), Size = UDim2.new(1, 0, 0, 14), TextSize = 11, TextColor3 = Theme.Dim, TextXAlignment = Enum.TextXAlignment.Left, TextWrapped = true, Parent = p })
+		self.profile = p
+	end
+	self.profileTitle.Text = ("LV %d · %s"):format(s.level, s.rank)
+	local span = math.max(1, s.nextLevelXp - s.levelXp)
+	self.profileFill.Size = UDim2.fromScale(math.clamp((s.xp - s.levelXp) / span, 0, 1), 1)
+	if s.persistent then
+		self.profileLine.Text = ("XP %d / %d · best day C%d S%d V%d · %d achievements"):format(s.xp, s.nextLevelXp, s.bestDay.Cadet, s.bestDay.Standard, s.bestDay.Veteran, s.achievements)
+		self.profileLine.TextColor3 = Theme.Dim
+	else
+		self.profileLine.Text = "⚠ Progress is not being saved this session."
+		self.profileLine.TextColor3 = Theme.Amber
+	end
+end
+
 function LobbyPanel:SetVisible(v: boolean)
 	self.gui.Enabled = v
 end

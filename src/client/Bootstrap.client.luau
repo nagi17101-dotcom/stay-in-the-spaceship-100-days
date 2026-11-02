@@ -30,6 +30,7 @@ local function applyPartyState(state)
 	if not inVoyage then overlays:HideDaySummary() end
 end
 Remotes.Get(N.PartyState).OnClientEvent:Connect(applyPartyState)
+Remotes.Get(N.ProfileState).OnClientEvent:Connect(function(s) lobby:SetProfile(s) end)
 require(script.Parent:WaitForChild("Tasks"):WaitForChild("TaskController")).Init(playerGui)
 require(script.Parent:WaitForChild("Effects"):WaitForChild("RoomFX")).Start()
 

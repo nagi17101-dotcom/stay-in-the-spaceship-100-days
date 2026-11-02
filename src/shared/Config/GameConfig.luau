@@ -92,6 +92,19 @@ Config.Lobby = {
 	DifficultyOrder = { "Cadet", "Standard", "Veteran" },
 }
 
+Config.Progression = {
+	AutosaveSeconds = 120,
+	XpPerLevelCurve = 50, -- xp needed for level L = 50 * (L-1)^2
+	Ranks = { -- cosmetic, permanent
+		{ level = 1, id = "CrewCadet", name = "CREW CADET" },
+		{ level = 5, id = "Technician", name = "TECHNICIAN" },
+		{ level = 10, id = "Navigator", name = "NAVIGATOR" },
+		{ level = 20, id = "Veteran", name = "VETERAN" },
+		{ level = 35, id = "Commander", name = "COMMANDER" },
+	},
+	SurviveMilestones = { 10, 25, 50, 75, 100 }, -- achievements per difficulty
+}
+
 function Config.MaterialName(id: string): string
 	for _, m in ipairs(Config.Materials) do if m.id == id then return m.name end end
 	return id
