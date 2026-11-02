@@ -97,6 +97,19 @@ return {
 	},
 
 	{
+		id = "ContainmentCascade", title = "Containment cascade", severity = "Major", cost = 1, minDay = 5, weight = 2, cooldown = 180,
+		sectorWeight = { ["Dead Relay Zone"] = 2 },
+		alert = "Containment alarm! A life-support compartment is failing and dragging the others with it.",
+		effects = { { system = "Oxygen", field = "health", amount = -15 }, { system = "Cooling", field = "health", amount = -10 } },
+		steps = {
+			{ objective = "CONTAINMENT: diagnose and isolate the faulty compartment at the Containment console (Life Support).",
+				paths = { { kind = "task", id = "ContainmentDiagnosis" } }, haltEscalation = true },
+			{ objective = "CONTAINMENT: compartment isolated — repair at the Oxygen Mixer (Life Support) or Coolant Loop (Reactor).",
+				paths = { { kind = "task", id = "OxygenMixer" }, { kind = "task", id = "CoolantLoop" } } },
+		},
+		escalate = { every = 30, max = 3, text = "Cascade spreading — atmosphere degrading.", effects = { { system = "Oxygen", field = "health", amount = -6 } } },
+	},
+	{
 		id = "ComponentWear", title = "Worn couplings", severity = "Major", cost = 1, minDay = 8, weight = 2, cooldown = 150,
 		sectorWeight = { ["Outer Freight Belt"] = 2 },
 		alert = "Worn couplings failing on the power and coolant lines!",

@@ -65,7 +65,8 @@ local function openTask(player: Player, station: Model)
 	local f = run.finale
 	local finaleStep = f and f.active and f:_current()
 	local finaleNeeds = finaleStep and finaleStep.kind == "task" and finaleStep.id == mg.Id
-	if sys.health >= REPAIR_THRESHOLD and not finaleNeeds and not mg.AlwaysAvailable then
+	local incidentNeeds = run.director ~= nil and run.director:NeedsTask(mg.Id)
+	if sys.health >= REPAIR_THRESHOLD and not finaleNeeds and not incidentNeeds and not mg.AlwaysAvailable then
 		return notify(player, "Info", mg.System .. " is nominal. No repair needed.")
 	end
 
@@ -89,7 +90,7 @@ local function openTask(player: Player, station: Model)
 
 	Remotes.Get(N.TaskOpen):FireClient(player, {
 		taskId = task.taskId, minigameId = mg.Id, tier = tier, system = mg.System,
-		publicPuzzle = pub, maxAttempts = MAX_ATTEMPTS, ttl = TASK_TTL,
+		publicPuzzle = pub, maxAttempts = mg.MaxAttempts or MAX_ATTEMPTS, ttl = TASK_TTL,
 	})
 end
 
@@ -135,12 +136,13 @@ local function onSubmit(player: Player, taskId: any, action: any)
 		if run.notifyRepair then run.notifyRepair(task.mg.System, "task:" .. task.mg.Id) end
 		return result(task, { ok = true, closed = true, reason = reason, message = message })
 	end
-	if task.attempts >= MAX_ATTEMPTS then
+	local maxAttempts = task.mg.MaxAttempts or MAX_ATTEMPTS
+	if task.attempts >= maxAttempts then
 		release(task, "FAILED")
 		return result(task, { ok = false, closed = true, reason = reason, message = message .. " Task failed — reopen the console to retry." })
 	end
 	task.state = "ACTIVE"
-	result(task, { ok = false, closed = false, reason = reason, message = message, attemptsLeft = MAX_ATTEMPTS - task.attempts })
+	result(task, { ok = false, closed = false, reason = reason, message = message, attemptsLeft = maxAttempts - task.attempts })
 end
 
 local function bindStation(station: Instance)

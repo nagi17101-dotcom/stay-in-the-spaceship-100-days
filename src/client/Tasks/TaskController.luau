@@ -17,10 +17,11 @@ local UIS = {
 	DroneSalvage = require(script.Parent.DroneSalvageUI),
 	ShieldResonance = require(script.Parent.ShieldResonanceUI),
 	FabricatorAssembly = require(script.Parent.FabricatorAssemblyUI),
+	ContainmentDiagnosis = require(script.Parent.ContainmentDiagnosisUI),
 	PowerBus = require(script.Parent.PowerBusUI),
 	CoolantLoop = require(script.Parent.CoolantLoopUI),
 }
-local TITLES = { HullSeal = "HULL SEAL PLANNER", OxygenMixer = "OXYGEN COMPOSITION MIXER", ReactorPhase = "REACTOR PHASE EQUALIZER", SignalTriangulator = "SIGNAL TRIANGULATOR", ThrusterMatrix = "THRUSTER ALIGNMENT MATRIX", GravityStabilizer = "GRAVITY STABILIZER", DroneSalvage = "DRONE SALVAGE PLANNER", ShieldResonance = "SHIELD RESONANCE", FabricatorAssembly = "FABRICATOR ASSEMBLY", PowerBus = "POWER BUS ALLOCATOR", CoolantLoop = "COOLANT LOOP" }
+local TITLES = { HullSeal = "HULL SEAL PLANNER", OxygenMixer = "OXYGEN COMPOSITION MIXER", ReactorPhase = "REACTOR PHASE EQUALIZER", SignalTriangulator = "SIGNAL TRIANGULATOR", ThrusterMatrix = "THRUSTER ALIGNMENT MATRIX", GravityStabilizer = "GRAVITY STABILIZER", DroneSalvage = "DRONE SALVAGE PLANNER", ShieldResonance = "SHIELD RESONANCE", FabricatorAssembly = "FABRICATOR ASSEMBLY", ContainmentDiagnosis = "CONTAINMENT DIAGNOSIS", PowerBus = "POWER BUS ALLOCATOR", CoolantLoop = "COOLANT LOOP" }
 
 local TaskController = {}
 local current

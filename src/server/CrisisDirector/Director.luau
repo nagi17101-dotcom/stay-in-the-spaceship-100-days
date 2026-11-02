@@ -141,7 +141,7 @@ function Director:Tick(now: number)
 	-- Escalations (bounded, never instant loss)
 	for _, inc in ipairs(self.active) do
 		local esc = inc.template.escalate
-		if now >= inc.nextEscalateAt and inc.escalations < esc.max then
+		if not inc.halted and now >= inc.nextEscalateAt and inc.escalations < esc.max then
 			inc.escalations += 1
 			inc.nextEscalateAt = now + esc.every * self.run.ship.tuning.graceFactor
 			self:_apply(esc.effects, ("inc:%s:esc%d"):format(inc.id, inc.escalations))
@@ -191,6 +191,10 @@ function Director:OnRepaired(system: string, source: string)
 			if p.kind == kind and p.id == id then matched = true break end
 		end
 		if matched then
+			if step.haltEscalation and not inc.halted then
+				inc.halted = true
+				alertAll("Info", inc.template.title .. ": cascade halted.")
+			end
 			inc.step += 1
 			if inc.step > #inc.template.steps then
 				table.remove(self.active, i)
@@ -202,6 +206,19 @@ function Director:OnRepaired(system: string, source: string)
 			return
 		end
 	end
+end
+
+-- True while an active incident's current step can be resolved by this minigame (lets the task open even if its system looks healthy)
+function Director:NeedsTask(minigameId: string): boolean
+	for _, inc in ipairs(self.active) do
+		local step = inc.template.steps[inc.step]
+		if step then
+			for _, p in ipairs(step.paths) do
+				if p.kind == "task" and p.id == minigameId then return true end
+			end
+		end
+	end
+	return false
 end
 
 function Director:Objective(): string?

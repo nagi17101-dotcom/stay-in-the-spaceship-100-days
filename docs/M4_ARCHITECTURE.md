@@ -60,3 +60,14 @@ Shield mechanic: when shield output < `Dependencies.ShieldSafe` (50), the hull t
 | Commit hook (new, generic) | `mg.Commit(run, player, pub, action, taskId)` runs after `Validate`, before repair; returns false → task FAILED/closed. Fabricator: `TryDebit(cost, "fab:"..taskId)` then `ApplyRepair(bp.system, amount, "fab:"..taskId)` |
 | Generate signature | `Generate(tier, seed, ctx?)`; `ctx` only when the module defines `Context(run)` |
 | Director | `ComponentWear` (day ≥ 8, Power −18 / Cooling −12): Fabricator or PowerBus |
+
+## Containment Diagnosis (M12)
+| Item | Detail |
+|---|---|
+| Station | Life Support `LS-ContainmentDiagnosis` (System Oxygen, RepairAmount 10, `MaxAttempts` 2) |
+| Open rule | `CanOpen`: only while `run.director:NeedsTask("ContainmentDiagnosis")` |
+| Puzzle | 3 compartments × PRES/TEMP/CO2/FLOW; fault = both signature sensors fresh & in direction, other fresh sensors nominal (`Rules.Consistent`); generator rejects layouts where `Rules.Candidates` ≠ exactly one |
+| Advanced | stale (explainable) and offline sensors, spillover of a root symptom, red herring, one of the fault's two interventions blocked with a reason |
+| Action | `{ isolate = {i}, cause, fix }` — isolating any healthy compartment is "Unsafe" |
+| Director | `ContainmentCascade` (day ≥ 5): step 1 diagnosis (`haltEscalation = true`), step 2 OxygenMixer or CoolantLoop |
+| Generic additions | `Director:NeedsTask(id)` (TaskService lets an incident-needed task open even when its system looks healthy — deadlock guard), step `haltEscalation`, minigame `MaxAttempts` |
