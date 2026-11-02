@@ -21,6 +21,7 @@ Evidence = Studio playtest unless noted. "Single-player" = Studio solo override;
 | M1-17 | Character placement with verify/retry (in-place teleport recovery) | DONE (solo) | placed in ship and back in lobby |
 | M1-18 | Cross-place lobby → reserved voyage server (TeleportService) | NOT STARTED | needs published place IDs |
 | M1-15 | 2-player and 6-player Studio test (Test > Clients and Servers) | NOT STARTED | must be run in Studio by owner |
-| M2-01 | Minigames HullSeal, OxygenMixer (Batch A rest) | NOT STARTED | — |
-| M2-02 | Crisis Director (incident budget) | NOT STARTED | — |
-| M3-01 | Persistent profiles (DataStore, versioned) | NOT STARTED | — |
+| M3-01 | Minigame HullSeal (M01) Basic/Advanced + station (Hub) | DONE | 300 seeds/tier solvable; empty rejected (LeakOpen), solver-from-public-data accepted, Hull +35 in play |
+| M3-02 | Minigame OxygenMixer (M02) | NOT STARTED | — |
+| M3-03 | Crisis Director v1 (budget, templates, feasibility) | NOT STARTED | design: docs/M3_ARCHITECTURE.md |
+| M3-04 | Persistent profiles (DataStore, versioned) | NOT STARTED | — |

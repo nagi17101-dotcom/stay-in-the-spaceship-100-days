@@ -8,10 +8,11 @@ local C = require(HUD.Components)
 local N = Remotes.Names
 
 local UIS = {
+	HullSeal = require(script.Parent.HullSealUI),
 	PowerBus = require(script.Parent.PowerBusUI),
 	CoolantLoop = require(script.Parent.CoolantLoopUI),
 }
-local TITLES = { PowerBus = "POWER BUS ALLOCATOR", CoolantLoop = "COOLANT LOOP" }
+local TITLES = { HullSeal = "HULL SEAL PLANNER", PowerBus = "POWER BUS ALLOCATOR", CoolantLoop = "COOLANT LOOP" }
 
 local TaskController = {}
 local current
