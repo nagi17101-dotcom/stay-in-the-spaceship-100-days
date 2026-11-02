@@ -43,12 +43,23 @@ return {
 		escalate = { every = 30, max = 2, text = "Breathable reserve dropping.", effects = { { system = "Oxygen", field = "output", amount = -6 } } },
 	},
 	{
+		id = "CoilDrift", title = "Reactor coil phase drift", severity = "Major", cost = 1, minDay = 3, weight = 2, cooldown = 150,
+		alert = "Reactor coils drifting out of phase! Output unstable.",
+		effects = { { system = "Reactor", field = "health", amount = -25 } },
+		steps = {
+			{ objective = "COIL DRIFT: resynchronize the coils at the Reactor Phase console (Reactor room).",
+				paths = { { kind = "task", id = "ReactorPhase" } } },
+		},
+		escalate = { every = 30, max = 2, text = "Coil drift worsening — reactor output dropping.", effects = { { system = "Reactor", field = "health", amount = -7 } } },
+	},
+	{
 		id = "HotCore", title = "Hot core chain", severity = "Critical", cost = 2, minDay = 4, weight = 1, cooldown = 300,
 		alert = "HOT CORE: coolant loop blocked and reactor output unstable!",
 		effects = { { system = "Cooling", field = "health", amount = -25 }, { system = "Reactor", field = "health", amount = -15 } },
 		steps = {
 			{ objective = "HOT CORE 1/2: restore the Coolant Loop first (Reactor room).", paths = { { kind = "task", id = "CoolantLoop" } } },
-			{ objective = "HOT CORE 2/2: reroute power at the Power Bus to stabilize output.", paths = { { kind = "task", id = "PowerBus" } } },
+			{ objective = "HOT CORE 2/2: stabilize output — Reactor Phase console or Power Bus.",
+				paths = { { kind = "task", id = "ReactorPhase" }, { kind = "task", id = "PowerBus" } } },
 		},
 		escalate = { every = 40, max = 2, text = "Core temperature climbing.", effects = { { system = "Reactor", field = "health", amount = -8 } } },
 	},

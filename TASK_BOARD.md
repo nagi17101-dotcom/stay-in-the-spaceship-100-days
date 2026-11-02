@@ -23,6 +23,7 @@ Evidence = Studio playtest unless noted. "Single-player" = Studio solo override;
 | M1-15 | 2-player and 6-player Studio test (Test > Clients and Servers) | NOT STARTED | must be run in Studio by owner |
 | M3-01 | Minigame HullSeal (M01) Basic/Advanced + station (Hub) | DONE | 300 seeds/tier solvable; empty rejected (LeakOpen), solver-from-public-data accepted, Hull +35 in play |
 | M3-02 | Minigame OxygenMixer (M02) Basic/Advanced (wave source) + station (Life Support) | DONE | 300 seeds/tier solvable, 1–15 of 375 settings valid; max-everything rejected (PowerOver), public-data solution accepted, Oxygen +30 in play |
+| M3-06 | Minigame ReactorPhase (M03) Basic/Advanced (coupled coils) + station (Reactor) + Director CoilDrift, HotCore step 2 alt path | DONE | 300 seeds/tier: solvable, start never synced, 1–6 of 1728 tunings valid; in play: OutOfPhase + Overheat rejected, valid accepted, CoilDrift resolved via ReactorPhase |
 | M3-03 | Crisis Director v1: 5 templates, day budget, feasibility, bounded escalation, recovery window | DONE (solo) | feasibility matrix (day/health/no-path/Veteran/critical cap); natural spawn BreakerTrip → resolved via PowerBus; forced MicroBreach escalated 1/2 → resolved via Hull Patch kit |
 | M3-05 | Director: 2/6-player tests, more templates (Shield, Comms, Navigation once their minigames exist) | NOT STARTED | — |
 | M3-04 | Persistent profiles (DataStore, versioned) | NOT STARTED | — |

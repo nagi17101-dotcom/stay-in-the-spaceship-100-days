@@ -7,7 +7,10 @@ Order: **HullSeal → OxygenMixer → CrisisDirector**. Incidents need real repa
 |---|---|---|---|---|
 | HullSeal (M01) | Hull +35 | Hub `HUB-HullSeal` | `Shared/Minigames/HullSealRules` | DONE |
 | OxygenMixer (M02) | Oxygen +30 | Life Support `LS-OxygenMixer` | `Shared/Minigames/OxygenMixerRules` | DONE |
+| ReactorPhase (M03) | Reactor +35 | Reactor `RX-ReactorPhase` | `Shared/Minigames/ReactorPhaseRules` | DONE |
 | PowerBus (M04) | Power +35 | Reactor | — | DONE |
+
+**Batch A complete** (M01–M04).
 
 Pattern: pure rule evaluation lives in a **shared** module (client shows live hints, server re-runs it as authority). The **server** module owns `Generate` (builds a known solution first, then obstacles around it), `CheckSolvable`, `ValidateShape`. Solutions never leave the server. Every generator gets a 300-seed/tier self-test.
 
