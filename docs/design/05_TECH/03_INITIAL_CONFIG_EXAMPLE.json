@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "name": "Stay in the Spaceship for 100 Days",
+    "version": "design-1.0",
+    "note": "EXAMPLE DESIGN DATA; not a final authoritative Lua module",
+    "playersMin": 2,
+    "playersMax": 6,
+    "dayMilestone": 100,
+    "endlessStarts": 101,
+    "worldType": "3D",
+    "outerSpaceAlwaysBlack": true
+  },
+  "day": {
+    "operationsSeconds": 75,
+    "preparationSeconds": 15,
+    "targetTotalDays": 100,
+    "resumeExpiresHours": 72,
+    "studioDevSinglePlayerOverride": false
+  },
+  "difficulty": {
+    "Cadet": {
+      "incidentBudgetFactor": 0.7,
+      "startingResourcesFactor": 1.35,
+      "wearFactor": 0.7,
+      "graceFactor": 1.35,
+      "maxConcurrentCritical": 1
+    },
+    "Standard": {
+      "incidentBudgetFactor": 1.0,
+      "startingResourcesFactor": 1.0,
+      "wearFactor": 1.0,
+      "graceFactor": 1.0,
+      "maxConcurrentCritical": 2
+    },
+    "Veteran": {
+      "incidentBudgetFactor": 1.25,
+      "startingResourcesFactor": 0.9,
+      "wearFactor": 1.15,
+      "graceFactor": 0.85,
+      "maxConcurrentCritical": 2
+    }
+  },
+  "rooms": [
+    "Bridge",
+    "Navigation",
+    "Reactor",
+    "Engine",
+    "LifeSupport",
+    "Power",
+    "Cooling",
+    "Workshop",
+    "Cargo",
+    "Comms",
+    "MedRest",
+    "AirlockEVA"
+  ],
+  "daySectors": [
+    {
+      "name": "Awakening",
+      "days": [
+        1,
+        5
+      ]
+    },
+    {
+      "name": "Outer Freight Belt",
+      "days": [
+        6,
+        15
+      ]
+    },
+    {
+      "name": "Echo Fields",
+      "days": [
+        16,
+        30
+      ]
+    },
+    {
+      "name": "Ion Corridor",
+      "days": [
+        31,
+        50
+      ]
+    },
+    {
+      "name": "Dead Relay Zone",
+      "days": [
+        51,
+        70
+      ]
+    },
+    {
+      "name": "Fading Signal",
+      "days": [
+        71,
+        90
+      ]
+    },
+    {
+      "name": "Approach",
+      "days": [
+        91,
+        99
+      ]
+    },
+    {
+      "name": "Return Signal",
+      "days": [
+        100,
+        100
+      ]
+    }
+  ],
+  "minigameIds": [
+    "HullSeal",
+    "OxygenMixer",
+    "ReactorPhase",
+    "PowerBus",
+    "CoolantLoop",
+    "SignalTriangulator",
+    "ThrusterMatrix",
+    "GravityStabilizer",
+    "DroneSalvage",
+    "ShieldResonance",
+    "FabricatorAssembly",
+    "ContainmentDiagnosis"
+  ],
+  "gameplayFlags": {
+    "requiresServerAuthoritativeRepair": true,
+    "voiceChatRequired": false,
+    "paidItemsRequired": false,
+    "daySkyCycle": false
+  }
+}

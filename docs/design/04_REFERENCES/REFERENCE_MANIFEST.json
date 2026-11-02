@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Among Us",
+    "design_use": "Purposeful compartment naming; simple ship task readability",
+    "url": "https://www.innersloth.com/games/among-us/",
+    "rights": "Copyrighted; inspiration only",
+    "ai_generated": false,
+    "is_embedded": false
+  },
+  {
+    "name": "FTL: Faster Than Light",
+    "design_use": "System dependencies and triage under resource pressure",
+    "url": "https://store.steampowered.com/app/212680/FTL_Faster_Than_Light/",
+    "rights": "Copyrighted; inspiration only",
+    "ai_generated": false,
+    "is_embedded": false
+  },
+  {
+    "name": "Void Crew",
+    "design_use": "3D human-scale ship teamwork and physical consoles",
+    "url": "https://store.steampowered.com/app/1063420/Void_Crew/",
+    "rights": "Copyrighted; inspiration only",
+    "ai_generated": false,
+    "is_embedded": false
+  },
+  {
+    "name": "Space Station 14",
+    "design_use": "Many interacting ship issues and differentiated crew work",
+    "url": "https://spacestation14.com/",
+    "rights": "Check material-specific license; study only",
+    "ai_generated": false,
+    "is_embedded": false
+  },
+  {
+    "name": "99 Nights in the Forest",
+    "design_use": "Day survival escalation and milestone anticipation",
+    "url": "https://www.roblox.com/search/experiences?keyword=99%20Nights%20in%20the%20Forest",
+    "rights": "Copyrighted; day-loop inspiration only",
+    "ai_generated": false,
+    "is_embedded": false
+  },
+  {
+    "name": "Kenney Space Station Kit",
+    "design_use": "Original 3D modular kit suitable for prototyping interior silhouettes",
+    "url": "https://kenney.nl/assets/space-station-kit",
+    "rights": "CC0 human-made asset kit",
+    "ai_generated": false,
+    "is_embedded": false
+  },
+  {
+    "name": "Kenney Space Kit",
+    "design_use": "Original 3D exterior/port kit suitable for lobby prototyping",
+    "url": "https://kenney.nl/assets/space-kit",
+    "rights": "CC0 human-made asset kit",
+    "ai_generated": false,
+    "is_embedded": false
+  }
+]
