@@ -9,4 +9,5 @@ return {
 	SignalTriangulator = require(folder.SignalTriangulator),
 	ThrusterMatrix = require(folder.ThrusterMatrix),
 	GravityStabilizer = require(folder.GravityStabilizer),
+	DroneSalvage = require(folder.DroneSalvage),
 }

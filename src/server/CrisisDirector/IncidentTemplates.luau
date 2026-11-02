@@ -86,6 +86,16 @@ return {
 		escalate = { every = 30, max = 2, text = "Wobble growing — cargo racks shifting.", effects = { { system = "Cargo", field = "health", amount = -7 } } },
 	},
 	{
+		id = "ReceiverJam", title = "Cargo receiver jam", severity = "Major", cost = 1, minDay = 4, weight = 1, cooldown = 200,
+		alert = "Cargo receiver jammed! Drone salvage cannot dock.",
+		effects = { { system = "Cargo", field = "health", amount = -20 } },
+		steps = {
+			{ objective = "RECEIVER JAM: recalibrate cargo handling at the Gravity Stabilizer (Workshop) to free the drone dock.",
+				paths = { { kind = "task", id = "GravityStabilizer" } } },
+		},
+		escalate = { every = 35, max = 2, text = "Receiver rails grinding — cargo handling degrading.", effects = { { system = "Cargo", field = "health", amount = -6 } } },
+	},
+	{
 		id = "HotCore", title = "Hot core chain", severity = "Critical", cost = 2, minDay = 4, weight = 1, cooldown = 300,
 		alert = "HOT CORE: coolant loop blocked and reactor output unstable!",
 		effects = { { system = "Cooling", field = "health", amount = -25 }, { system = "Reactor", field = "health", amount = -15 } },

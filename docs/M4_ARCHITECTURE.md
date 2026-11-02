@@ -37,3 +37,6 @@ Same contract (shared Rules + server generator/validator + UI + 300-seed self-te
 | Id | System | Station | Rules module | Status |
 |---|---|---|---|---|
 | GravityStabilizer (M08) | Cargo +35 | Workshop `WS-GravityStabilizer` | `Shared/Minigames/GravityStabilizerRules` | DONE |
+| DroneSalvage (M09) | resource task (no repair) | Workshop `WS-DroneSalvage` | `Shared/Minigames/DroneSalvageRules` | DONE |
+
+Minigame module optional hooks (TaskService): `AlwaysAvailable` (open without damage), `CanOpen(run) -> ok, why`, `OnSuccess(run, player, pub, action, taskId)` (server-side rewards, keyed by taskId).

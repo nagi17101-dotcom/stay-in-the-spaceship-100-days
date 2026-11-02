@@ -7,6 +7,7 @@ Types: `src/shared/Types/ShipTypes.luau`. Remotes: `src/shared/Network/Remotes.l
 - `CheckSolvable(public, private) -> boolean`
 - `ValidateShape(public, action) -> boolean` — strict payload typing
 - `Validate(public, private, action) -> ok, reasonCode, message` — any valid answer accepted
+- Optional: `AlwaysAvailable`, `CanOpen(run) -> ok, why`, `OnSuccess(run, player, public, action, taskId)` for non-repair tasks (rewards credited server-side, idempotent by taskId)
 Client UI: `src/client/Tasks/<Id>UI.luau` with `Mount(body, public) -> { getAction }`. UI never grants anything.
 
 ## Task lifecycle (TaskService)

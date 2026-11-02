@@ -58,10 +58,14 @@ local function openTask(player: Player, station: Model)
 	local mg = Registry[station:GetAttribute("MinigameId")]
 	if not mg then return end
 	local sys = run.ship.systems[mg.System]
+	if mg.CanOpen then
+		local allowed, why = mg.CanOpen(run)
+		if not allowed then return notify(player, "Info", why) end
+	end
 	local f = run.finale
 	local finaleStep = f and f.active and f:_current()
 	local finaleNeeds = finaleStep and finaleStep.kind == "task" and finaleStep.id == mg.Id
-	if sys.health >= REPAIR_THRESHOLD and not finaleNeeds then
+	if sys.health >= REPAIR_THRESHOLD and not finaleNeeds and not mg.AlwaysAvailable then
 		return notify(player, "Info", mg.System .. " is nominal. No repair needed.")
 	end
 
@@ -114,7 +118,10 @@ local function onSubmit(player: Player, taskId: any, action: any)
 	task.attempts += 1
 	local ok, reason, message = task.mg.Validate(task.pub, task.priv, action)
 	if ok then
-		run.ship:ApplyRepair(task.mg.System, task.mg.RepairAmount, task.taskId) -- exactly-once by txId
+		if task.mg.RepairAmount > 0 then
+			run.ship:ApplyRepair(task.mg.System, task.mg.RepairAmount, task.taskId) -- exactly-once by txId
+		end
+		if task.mg.OnSuccess then task.mg.OnSuccess(run, player, task.pub, action, task.taskId) end
 		release(task, "RESOLVED")
 		print(("[Task] %s resolved by %s (+%d %s, tier=%s, attempts=%d)"):format(task.mg.Id, player.Name, task.mg.RepairAmount, task.mg.System, task.tier, task.attempts))
 		run.recordStat(player, "tasks", 1)
