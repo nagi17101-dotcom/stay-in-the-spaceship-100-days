@@ -115,6 +115,7 @@ local function onSubmit(player: Player, taskId: any, action: any)
 		release(task, "RESOLVED")
 		print(("[Task] %s resolved by %s (+%d %s, tier=%s, attempts=%d)"):format(task.mg.Id, player.Name, task.mg.RepairAmount, task.mg.System, task.tier, task.attempts))
 		run.recordStat(player, "tasks", 1)
+		if run.director then run.director:OnRepaired(task.mg.System, "task:" .. task.mg.Id) end
 		return result(task, { ok = true, closed = true, reason = reason, message = message })
 	end
 	if task.attempts >= MAX_ATTEMPTS then

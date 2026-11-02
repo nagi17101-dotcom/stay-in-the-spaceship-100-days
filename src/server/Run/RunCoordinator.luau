@@ -17,6 +17,7 @@ local RoomLightingService = require(Server.World.RoomLightingService)
 local SalvageService = require(Server.World.SalvageService)
 local QuickActionService = require(Server.World.QuickActionService)
 local LobbyPartyService = require(Server.LobbyMatchmaking.LobbyPartyService)
+local CrisisDirector = require(Server.CrisisDirector.Director)
 
 local N = Remotes.Names
 local RunCoordinator = {}
@@ -37,6 +38,8 @@ end
 
 local function currentObjective(): string
 	if run.emergency then return Config.EmergencyObjectives[run.emergency.reason] or "EMERGENCY" end
+	local incidentObjective = run.director and run.director:Objective()
+	if incidentObjective and run.day.phase ~= "Lobby" and not run.day:IsTerminal() then return incidentObjective end
 	local worst = run.ship:GetWorstSystem()
 	if worst and not run.day:IsTerminal() and run.day.phase ~= "Lobby" then
 		return Config.SystemObjectives[worst]
@@ -100,6 +103,7 @@ local function setEmergency(reason: string?)
 		if not run.emergency then return end
 		run.emergency = nil
 		alertAll("Info", nil, "Emergency averted. Ship stabilizing.")
+		run.director:OnEmergencyEnded()
 	end
 	Remotes.Get(N.Emergency):FireAllClients(run.emergency or { active = false })
 end
@@ -116,6 +120,7 @@ local function resetState()
 	run.ship:Reset()
 	run.inventory:Reset()
 	run.rewards:Reset()
+	if run.director then run.director:Reset() end
 end
 
 function RunCoordinator.ReturnToLobby(reason: string)
@@ -180,6 +185,7 @@ function RunCoordinator.Start()
 	run.inventory = InventoryService.new(run.ship.tuning.startingResourcesFactor)
 	run.rewards = RunRewards.new()
 	run.recordStat = function(player, key, n) run.rewards:Record(player, key, n) end
+	run.director = CrisisDirector.new(run)
 
 	run.ship.ModeChanged.Event:Connect(function(name, _old, new)
 		if run.day:IsTerminal() or run.day.phase == "Lobby" then return end
@@ -195,6 +201,7 @@ function RunCoordinator.Start()
 	run.day.PhaseChanged.Event:Connect(function(info)
 		print(("[Run %s] Day %d -> %s (%s)"):format(string.sub(run.runId, 1, 8), info.day, info.phase, info.sector))
 		Remotes.Get(N.DayPhase):FireAllClients(info)
+		run.director:OnPhase(info)
 		if info.phase == "Transition" then
 			local common, personal = run.rewards:CloseDay(run)
 			if common then
@@ -279,6 +286,7 @@ function RunCoordinator.Start()
 						Remotes.Get(N.Emergency):FireAllClients({ active = false })
 						day:Fail()
 					elseif not run.emergency then
+						if day:IsActive() then run.director:Tick(workspace:GetServerTimeNow()) end
 						day:Update(workspace:GetServerTimeNow()) -- emergencies hold the day open
 					end
 
@@ -310,6 +318,10 @@ function RunCoordinator.Start()
 				for _, st in ipairs(CollectionService:GetTagged("QuickAction")) do
 					if st:GetAttribute("ActionId") == a then QuickActionService.Use(Players:GetPlayers()[1], st) end
 				end
+			elseif cmd == "incident" then
+				return run.director:ForceSpawn(a)
+			elseif cmd == "director" then
+				return run.director:Status() .. " | objective: " .. tostring(run.director:Objective())
 			elseif cmd == "skip" then
 				run.day:SkipPhase()
 			elseif cmd == "fail" then

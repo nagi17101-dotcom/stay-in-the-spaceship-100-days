@@ -11,7 +11,7 @@ Order: **HullSeal → OxygenMixer → CrisisDirector**. Incidents need real repa
 
 Pattern: pure rule evaluation lives in a **shared** module (client shows live hints, server re-runs it as authority). The **server** module owns `Generate` (builds a known solution first, then obstacles around it), `CheckSolvable`, `ValidateShape`. Solutions never leave the server. Every generator gets a 300-seed/tier self-test.
 
-## 2. Crisis Director v1 (`src/server/CrisisDirector/`)
+## 2. Crisis Director v1 (`src/server/CrisisDirector/`) — IMPLEMENTED
 ```
 CrisisDirector/
   Director.luau          -- tick during Active phase, budget, scheduling, lifecycle
@@ -50,3 +50,11 @@ If no template passes → spawn nothing (never an untested impossible scenario).
 
 ### Stability
 Cooldown per template, max chain depth 2, causal chain id per incident, hysteresis already in ShipState. Deterministic from run seed (reproducible logs: `[Director] day, template, seed, result`).
+
+### Implementation notes (v1)
+- Budget: `min(4, (1 + 0.15·day) × incidentBudgetFactor × clamp(1 + 0.15·(crew−2), 1, 1.6) × relief)`; relief 0.5 (<50% avg) / 0.75 (<70%) / 1. Day 1 ≈ one Major incident.
+- Spawn check every 8s in Active, skipping the first/last 10s, emergencies and a 25s RECOVERY WINDOW after an emergency.
+- Feasibility rejects: too early, same template or same root system already active, critical cap, worst case (spawn + all escalations) dropping any value below 15, a step without an available path, total path time > escalation window × graceFactor.
+- Incidents persist across Prepare/Transition (no magic reset); cleared on Lobby/Failed.
+- HUD objective priority: emergency > active incident step > worst system > phase text.
+- Studio dev: `DevCommand:Invoke("incident", "<TemplateId>")`, `DevCommand:Invoke("director")`.
