@@ -6,4 +6,5 @@ return {
 	ReactorPhase = require(folder.ReactorPhase),
 	PowerBus = require(folder.PowerBus),
 	CoolantLoop = require(folder.CoolantLoop),
+	SignalTriangulator = require(folder.SignalTriangulator),
 }

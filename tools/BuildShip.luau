@@ -199,6 +199,7 @@ station(reactor, "RX-CoolantLoop", "CoolantLoop", "Cooling", "Coolant Loop", Vec
 station(hub, "HUB-HullSeal", "HullSeal", "Hull", "Hull Seal", Vector3.new(-6.5, Y + 2, 7.8), Vector3.new(0, 0, -1))
 station(life, "LS-OxygenMixer", "OxygenMixer", "Oxygen", "Oxygen Mixer", Vector3.new(-38, Y + 2, 9.8), Vector3.new(0, 0, -1))
 station(reactor, "RX-ReactorPhase", "ReactorPhase", "Reactor", "Reactor Phase", Vector3.new(8, Y + 2, 51.8), Vector3.new(0, 0, -1))
+station(bridge, "BR-SignalTriangulator", "SignalTriangulator", "Comms", "Signal Triangulator", Vector3.new(-13.5, Y + 2, -40), Vector3.new(1, 0, 0))
 
 -- Salvage points + emergency quick actions
 local function point(rm, tag, attr, value, name, objectText, actionText, hold, pos, size, color)

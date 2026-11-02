@@ -12,6 +12,13 @@ Order: **HullSeal → OxygenMixer → CrisisDirector**. Incidents need real repa
 
 **Batch A complete** (M01–M04).
 
+| Id | System | Station | Rules module | Status |
+|---|---|---|---|---|
+| SignalTriangulator (M06) | Comms +35 | Bridge `BR-SignalTriangulator` | `Shared/Minigames/SignalTriangulatorRules` | DONE |
+| ThrusterMatrix (M07) | Drive | Bridge/Engine | — | next |
+
+Director: templates may set `sectorWeight = { [sectorName] = multiplier }` (GhostEcho ×3 in Echo Fields).
+
 Pattern: pure rule evaluation lives in a **shared** module (client shows live hints, server re-runs it as authority). The **server** module owns `Generate` (builds a known solution first, then obstacles around it), `CheckSolvable`, `ValidateShape`. Solutions never leave the server. Every generator gets a 300-seed/tier self-test.
 
 ## 2. Crisis Director v1 (`src/server/CrisisDirector/`) — IMPLEMENTED

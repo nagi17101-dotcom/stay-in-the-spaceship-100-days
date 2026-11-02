@@ -53,6 +53,17 @@ return {
 		escalate = { every = 30, max = 2, text = "Coil drift worsening — reactor output dropping.", effects = { { system = "Reactor", field = "health", amount = -7 } } },
 	},
 	{
+		id = "GhostEcho", title = "Navigation ghost echo", severity = "Major", cost = 1, minDay = 2, weight = 2, cooldown = 150,
+		sectorWeight = { ["Echo Fields"] = 3 },
+		alert = "Ghost echo on the comms array! Beacon position unreliable.",
+		effects = { { system = "Comms", field = "health", amount = -25 } },
+		steps = {
+			{ objective = "GHOST ECHO: triangulate the real beacon at the Signal console (Bridge).",
+				paths = { { kind = "task", id = "SignalTriangulator" } } },
+		},
+		escalate = { every = 30, max = 2, text = "Navigation drifting on bad signal data.", effects = { { system = "Navigation", field = "health", amount = -7 } } },
+	},
+	{
 		id = "HotCore", title = "Hot core chain", severity = "Critical", cost = 2, minDay = 4, weight = 1, cooldown = 300,
 		alert = "HOT CORE: coolant loop blocked and reactor output unstable!",
 		effects = { { system = "Cooling", field = "health", amount = -25 }, { system = "Reactor", field = "health", amount = -15 } },

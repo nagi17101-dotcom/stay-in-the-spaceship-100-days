@@ -143,13 +143,19 @@ function Director:Tick(now: number)
 	for _, t in ipairs(Templates) do
 		if self.spent + t.cost <= self.budget + 1e-6 and now >= (self.cooldownUntil[t.id] or 0) then
 			local ok = Feasibility.Check(t, ctx)
-			if ok then table.insert(candidates, t) total += t.weight end
+			if ok then
+				local sector = Config.SectorFor(self.run.day.day)
+				local w = t.weight * ((t.sectorWeight and t.sectorWeight[sector]) or 1)
+				table.insert(candidates, { t = t, w = w })
+				total += w
+			end
 		end
 	end
 	if total == 0 then return end -- invalid/unsafe data => choose no incident
 	local roll = self.run.rng:NextNumber(0, total)
-	for _, t in ipairs(candidates) do
-		roll -= t.weight
+	for _, c in ipairs(candidates) do
+		local t = c.t
+		roll -= c.w
 		if roll <= 0 then
 			self.spent += t.cost
 			self.cooldownUntil[t.id] = now + t.cooldown
