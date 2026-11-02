@@ -34,7 +34,7 @@ function QuickActions.Start(run)
 		run.ship:ApplyDelta(cfg.system, cfg.field, cfg.amount, txId)
 		stationCooldown[station] = os.clock() + cfg.cooldown
 		run.recordStat(player, "actions", 1)
-		if run.director then run.director:OnRepaired(cfg.system, "action:" .. actionId) end
+		if run.notifyRepair then run.notifyRepair(cfg.system, "action:" .. actionId) end
 		Remotes.Get(N.Alert):FireAllClients({ severity = "Info", text = ("%s used %s (+%d %s)."):format(player.DisplayName, cfg.label, cfg.amount, cfg.system) })
 	end
 

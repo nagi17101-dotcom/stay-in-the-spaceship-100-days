@@ -31,6 +31,13 @@ local function applyPartyState(state)
 end
 Remotes.Get(N.PartyState).OnClientEvent:Connect(applyPartyState)
 Remotes.Get(N.ProfileState).OnClientEvent:Connect(function(s) lobby:SetProfile(s) end)
+Remotes.Get(N.VoteState).OnClientEvent:Connect(function(state)
+	if not inVoyage then return end
+	overlays:ShowVote(state, myUserId, function(choice) Remotes.Get(N.CastVote):FireServer(choice) end)
+end)
+Remotes.Get(N.RunComplete).OnClientEvent:Connect(function(data)
+	if inVoyage then overlays:ShowRunComplete(data) end
+end)
 require(script.Parent:WaitForChild("Tasks"):WaitForChild("TaskController")).Init(playerGui)
 require(script.Parent:WaitForChild("Effects"):WaitForChild("RoomFX")).Start()
 

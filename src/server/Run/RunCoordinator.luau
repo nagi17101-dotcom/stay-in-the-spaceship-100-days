@@ -19,6 +19,7 @@ local QuickActionService = require(Server.World.QuickActionService)
 local LobbyPartyService = require(Server.LobbyMatchmaking.LobbyPartyService)
 local CrisisDirector = require(Server.CrisisDirector.Director)
 local ProfileService = require(Server.Progression.ProfileService)
+local FinaleService = require(Server.Finale.FinaleService)
 
 local N = Remotes.Names
 local RunCoordinator = {}
@@ -39,6 +40,8 @@ end
 
 local function currentObjective(): string
 	if run.emergency then return Config.EmergencyObjectives[run.emergency.reason] or "EMERGENCY" end
+	local finaleObjective = run.finale and run.finale:Objective()
+	if finaleObjective then return finaleObjective end
 	local incidentObjective = run.director and run.director:Objective()
 	if incidentObjective and run.day.phase ~= "Lobby" and not run.day:IsTerminal() then return incidentObjective end
 	local worst = run.ship:GetWorstSystem()
@@ -122,6 +125,9 @@ local function resetState()
 	run.inventory:Reset()
 	run.rewards:Reset()
 	if run.director then run.director:Reset() end
+	if run.finale then run.finale:Reset() end
+	run.endless = false
+	run.completeToken = (run.completeToken or 0) + 1
 end
 
 function RunCoordinator.ReturnToLobby(reason: string)
@@ -191,6 +197,41 @@ function RunCoordinator.Start()
 	run.rewards = RunRewards.new()
 	run.recordStat = function(player, key, n) run.rewards:Record(player, key, n) end
 	run.director = CrisisDirector.new(run)
+	run.finale = FinaleService.new(run)
+	run.notifyRepair = function(system, source)
+		run.director:OnRepaired(system, source)
+		run.finale:OnRepaired(system, source)
+	end
+	run.onFinaleComplete = function()
+		alertAll("Info", nil, "MISSION COMPLETE — DAY 100. Return signal locked. Vote: extract or continue.")
+		for _, p in ipairs(crewPlayers()) do
+			-- everyone aboard gets the win, whatever the vote decides
+			ProfileService.Grant(p, "finale:" .. run.runId, { xp = Config.Finale.Xp, bestDay = { difficulty = run.difficulty, day = Config.DayMilestone } })
+		end
+		run.day:EnterVote(Config.Finale.VoteSeconds)
+		run.finale:OpenVote()
+	end
+	run.onVoteResult = function(choice)
+		if choice == "Continue" then
+			run.endless = true
+			alertAll("Info", nil, "ENDLESS VOYAGE — the crew continues past Day 100.")
+			run.day:ContinueEndless()
+			return
+		end
+		for _, p in ipairs(crewPlayers()) do
+			ProfileService.Grant(p, "runend:" .. run.runId, { stats = { runs = 1 } })
+		end
+		run.day:Complete()
+		Remotes.Get(N.RunComplete):FireAllClients({
+			day = run.day.day, difficulty = run.difficulty,
+			tasks = run.rewards.crewTotal.tasks, salvage = run.rewards.crewTotal.salvage,
+			returnIn = Config.Finale.CompleteReturnSeconds,
+		})
+		local token = run.completeToken
+		task.delay(Config.Finale.CompleteReturnSeconds, function()
+			if run.completeToken == token and run.day.phase == "Complete" then RunCoordinator.ReturnToLobby("mission complete (extracted)") end
+		end)
+	end
 
 	run.ship.ModeChanged.Event:Connect(function(name, _old, new)
 		if run.day:IsTerminal() or run.day.phase == "Lobby" then return end
@@ -206,7 +247,10 @@ function RunCoordinator.Start()
 	run.day.PhaseChanged.Event:Connect(function(info)
 		print(("[Run %s] Day %d -> %s (%s)"):format(string.sub(run.runId, 1, 8), info.day, info.phase, info.sector))
 		Remotes.Get(N.DayPhase):FireAllClients(info)
+		run.lastObjective = currentObjective()
+		Remotes.Get(N.StateDelta):FireAllClients({ revision = run.ship.revision, systems = {}, objective = run.lastObjective })
 		run.director:OnPhase(info)
+		if info.phase == "Finale" then run.finale:Begin() end
 		if info.phase == "Transition" then
 			local common, personal = run.rewards:CloseDay(run)
 			if common then
@@ -289,7 +333,8 @@ function RunCoordinator.Start()
 
 				if not day:IsTerminal() then
 					run.ship.crewCount = math.max(1, present)
-					run.ship:Step(dt, day:IsActive())
+					run.ship:Step(dt, day:IsActive() or day:IsFinale())
+					if day:IsFinale() then run.finale:Tick(dt) end
 
 					setEmergency(run.ship:GetCatastrophe())
 					if run.emergency and workspace:GetServerTimeNow() >= run.emergency.endsAt then
@@ -302,12 +347,15 @@ function RunCoordinator.Start()
 						day:Update(workspace:GetServerTimeNow()) -- emergencies hold the day open
 					end
 
+					-- send when systems changed OR the objective text changed (finale counters, incident steps)
 					local delta = run.ship:CollectDelta()
-					if delta then
+					local objective = currentObjective()
+					if delta or objective ~= run.lastObjective then
+						run.lastObjective = objective
 						Remotes.Get(N.StateDelta):FireAllClients({
 							revision = run.ship.revision,
-							systems = delta,
-							objective = currentObjective(),
+							systems = delta or {},
+							objective = objective,
 						})
 					end
 				end
@@ -335,6 +383,15 @@ function RunCoordinator.Start()
 				local first = ProfileService.Grant(p, a, { xp = b })
 				local second = ProfileService.Grant(p, a, { xp = b })
 				return ("first=%s second=%s"):format(tostring(first), tostring(second))
+			elseif cmd == "finale" then -- jump straight to Day 100 finale
+				run.day.day = Config.DayMilestone
+				run.day:_enter("Finale", nil)
+				return run.finale:Status()
+			elseif cmd == "finalestep" then
+				run.finale:DevAdvance()
+				return run.finale:Status() .. " | " .. tostring(run.finale:Objective())
+			elseif cmd == "finalestatus" then
+				return run.finale:Status() .. " | " .. tostring(run.finale:Objective())
 			elseif cmd == "incident" then
 				return run.director:ForceSpawn(a)
 			elseif cmd == "director" then

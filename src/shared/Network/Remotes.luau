@@ -20,6 +20,9 @@ Remotes.Names = {
 	RestartRun = "RestartRun",             -- C->S return to lobby after loss
 	PartyState = "PartyState",             -- S->C lobby party + run status
 	ProfileState = "ProfileState",         -- S->C account progression summary
+	VoteState = "VoteState",               -- S->C Day-100 extract/continue vote
+	CastVote = "CastVote",                 -- C->S "Extract" | "Continue"
+	RunComplete = "RunComplete",           -- S->C mission complete (extracted) summary
 	PartyAction = "PartyAction",           -- C->S { action, value } (create/join/leave/ready/difficulty/launch)
 }
 local FOLDER = "Remotes"

@@ -102,7 +102,16 @@ Config.Progression = {
 		{ level = 20, id = "Veteran", name = "VETERAN" },
 		{ level = 35, id = "Commander", name = "COMMANDER" },
 	},
-	SurviveMilestones = { 10, 25, 50, 75, 100 }, -- achievements per difficulty
+	SurviveMilestones = { 10, 25, 50, 75, 100, 125, 150, 200 }, -- achievements per difficulty (125+ = Endless)
+}
+
+Config.Finale = {
+	HoldSeconds = 20,            -- divided by graceFactor (Cadet shorter, Veteran longer)
+	HoldMinCondition = 40,       -- average ship condition % required while transmitting
+	TransmitterCost = { ConductiveFilament = 2, ScrapAlloy = 1 }, -- guaranteed reachable (filament is never spent elsewhere)
+	VoteSeconds = 30,
+	CompleteReturnSeconds = 15,
+	Xp = 500,
 }
 
 function Config.MaterialName(id: string): string
@@ -149,6 +158,8 @@ Config.PhaseObjectives = {
 	Active = "Keep all systems running until the cycle ends.",
 	Transition = "Cycle complete. Systems settling.",
 	Finale = "DAY 100 — Return Signal. Final objective incoming.",
+	Vote = "MISSION COMPLETE — vote: Extract or continue into the Endless Voyage.",
+	Complete = "Mission complete. Returning to the terminal.",
 	Failed = "Ship lost.",
 }
 

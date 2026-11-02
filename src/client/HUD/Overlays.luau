@@ -54,6 +54,59 @@ function Overlays:ShowDaySummary(data)
 	task.delay(delay, function() if self.summary == p then self:HideDaySummary() end end)
 end
 
+function Overlays:HideVote()
+	if self.vote then self.vote:Destroy() self.vote = nil end
+end
+
+-- Day-100 vote: two choices with live counts; tie/timeout => Extract (server decides)
+function Overlays:ShowVote(state, myUserId: number, cast: (string) -> ())
+	if not state.open then self:HideVote() return end
+	if not self.vote then
+		self:HideDaySummary()
+		local p = card(self.gui, 230)
+		self.vote = p
+		C.label({ LayoutOrder = 1, Size = UDim2.new(1, 0, 0, 26), Font = Theme.FontBold, TextSize = 20, TextColor3 = Theme.Teal, Text = "MISSION COMPLETE — DAY 100", Parent = p })
+		C.label({ LayoutOrder = 2, Size = UDim2.new(1, 0, 0, 30), TextSize = 12, TextColor3 = Theme.Dim, TextWrapped = true,
+			Text = "The return signal is locked. Crew vote: extract now, or continue into the Endless Voyage.", Parent = p })
+		local row = C.make("Frame", { LayoutOrder = 3, BackgroundTransparency = 1, Size = UDim2.new(1, 0, 0, 40), Parent = p })
+		self.voteExtract = C.button({ Size = UDim2.new(0.5, -4, 1, 0), Text = "", Parent = row })
+		self.voteContinue = C.button({ AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, 0, 0, 0), Size = UDim2.new(0.5, -4, 1, 0), Text = "", Parent = row })
+		self.voteExtract.Activated:Connect(function() cast("Extract") end)
+		self.voteContinue.Activated:Connect(function() cast("Continue") end)
+		self.voteTimer = C.label({ LayoutOrder = 4, Size = UDim2.new(1, 0, 0, 16), TextSize = 12, TextColor3 = Theme.Dim, Text = "", Parent = p })
+		local ref = p
+		task.spawn(function()
+			while self.vote == ref do
+				local left = math.max(0, math.ceil((self.voteEndsAt or 0) - workspace:GetServerTimeNow()))
+				self.voteTimer.Text = ("Tie or timeout → Extract · %ds"):format(left)
+				task.wait(0.25)
+			end
+		end)
+	end
+	self.voteEndsAt = state.endsAt
+	local mine = state.votes and (state.votes[myUserId] or state.votes[tostring(myUserId)])
+	self.voteExtract.Text = ("EXTRACT & FINISH (%d)"):format(state.extract)
+	self.voteContinue.Text = ("CONTINUE — ENDLESS (%d)"):format(state.continue)
+	self.voteExtract.BackgroundColor3 = mine == "Extract" and Theme.Teal or Theme.Track
+	self.voteContinue.BackgroundColor3 = mine == "Continue" and Theme.Amber or Theme.Track
+	self.voteExtract.TextColor3 = mine == "Extract" and Theme.Panel or Theme.Text
+	self.voteContinue.TextColor3 = mine == "Continue" and Theme.Panel or Theme.Text
+end
+
+function Overlays:ShowRunComplete(data)
+	self:HideVote()
+	self:HideDaySummary()
+	if self.complete then self.complete:Destroy() end
+	local p = card(self.gui, 200)
+	self.complete = p
+	C.label({ LayoutOrder = 1, Size = UDim2.new(1, 0, 0, 28), Font = Theme.FontBold, TextSize = 22, TextColor3 = Theme.Teal, Text = "VOYAGE COMPLETE", Parent = p })
+	C.label({ LayoutOrder = 2, Size = UDim2.new(1, 0, 0, 16), TextSize = 12, TextColor3 = Theme.Dim, Text = ("Extracted on Day %d · %s"):format(data.day, string.upper(data.difficulty)), Parent = p })
+	row(p, 3, "Repairs completed", tostring(data.tasks))
+	row(p, 4, "Salvage recovered", tostring(data.salvage))
+	C.label({ LayoutOrder = 5, Size = UDim2.new(1, 0, 0, 14), TextSize = 11, TextColor3 = Theme.Dim, Text = ("Returning to the terminal in %ds"):format(data.returnIn), Parent = p })
+	task.delay(data.returnIn + 2, function() if self.complete == p then p:Destroy() self.complete = nil end end)
+end
+
 function Overlays:HideShipLost()
 	if self.lost then self.lost:Destroy() self.lost = nil end
 end

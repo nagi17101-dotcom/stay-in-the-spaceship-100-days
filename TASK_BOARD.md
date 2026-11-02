@@ -20,7 +20,7 @@ Evidence = Studio playtest unless noted. "Single-player" = Studio solo override;
 | M1-16 | Crew-only interactions, disconnect warning + rejoin aboard, 60s abandon → lobby | CODE DONE | needs multi-client test |
 | M1-17 | Character placement with verify/retry (in-place teleport recovery) | DONE (solo) | placed in ship and back in lobby |
 | M1-18 | Cross-place lobby → reserved voyage server (TeleportService) | NOT STARTED | needs published place IDs |
-| M1-15 | 2-player and 6-player Studio test (Test > Clients and Servers) | NOT STARTED | must be run in Studio by owner |
+| M1-15 | 2-player Studio test (Clients and Servers) | DONE (owner) | owner reported: session locks + DataStore sync OK with 2 clients. 6-player test still open |
 | M3-01 | Minigame HullSeal (M01) Basic/Advanced + station (Hub) | DONE | 300 seeds/tier solvable; empty rejected (LeakOpen), solver-from-public-data accepted, Hull +35 in play |
 | M3-02 | Minigame OxygenMixer (M02) Basic/Advanced (wave source) + station (Life Support) | DONE | 300 seeds/tier solvable, 1–15 of 375 settings valid; max-everything rejected (PowerOver), public-data solution accepted, Oxygen +30 in play |
 | M3-06 | Minigame ReactorPhase (M03) Basic/Advanced (coupled coils) + station (Reactor) + Director CoilDrift, HotCore step 2 alt path | DONE | 300 seeds/tier: solvable, start never synced, 1–6 of 1728 tunings valid; in play: OutOfPhase + Overheat rejected, valid accepted, CoilDrift resolved via ReactorPhase |
@@ -29,3 +29,7 @@ Evidence = Studio playtest unless noted. "Single-player" = Studio solo override;
 | M3-03 | Crisis Director v1: 5 templates, day budget, feasibility, bounded escalation, recovery window | DONE (solo) | feasibility matrix (day/health/no-path/Veteran/critical cap); natural spawn BreakerTrip → resolved via PowerBus; forced MicroBreach escalated 1/2 → resolved via Hull Patch kit |
 | M3-05 | Director: 2/6-player tests, more templates (Shield, Comms, Navigation once their minigames exist) | NOT STARTED | — |
 | M3-04 | Persistent profiles: schema v1 + migration, UpdateAsync with retries/budget, session lock (stale 5 min), idempotent Grant, autosave 120s, save+release on leave/BindToClose, lobby profile panel | DONE | 13/13 unit tests (tests/ProfileStore.spec.luau); in play: 10 day grants → LV2 + Survive10_Standard; duplicate grant id rejected. Real DataStore (Studio API on): session 1 +40 → stored xp 40, lock released on close; session 2 reload xp 40, same grant rejected after reload, lock held while playing; close → xp 55, lock released |
+| M4-01 | Day 100 finale: 3 stages (SignalTriangulator → ReactorPhase+PowerBus → Beacon Fabricator + hold), finale restock, task threshold bypass | DONE (solo) | stage 1 via real Advanced task with healthy Comms; craft via real prompt (2 Filament + 1 Scrap debited); hold counter 0→19 live on HUD |
+| M4-02 | Crew vote Extract/Continue (tie/timeout → Extract), +500 XP + Day-100 achievement for all aboard | DONE (solo) | timeout → Extract; Continue → Day 101; Extract → VOYAGE COMPLETE → lobby after 15s |
+| M4-03 | Endless Voyage (Day 101+, HUD without /100, milestones 125/150/200) | DONE (solo) | Day 101 · ENDLESS VOYAGE shown; endless loss → Ship Lost → lobby |
+| M4-04 | Minigames M08–M12 (GravityStabilizer, DroneSalvage, ShieldResonance, FabricatorAssembly, ContainmentDiagnosis) | NOT STARTED | — |

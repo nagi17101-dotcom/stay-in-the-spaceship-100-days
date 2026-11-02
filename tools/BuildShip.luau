@@ -221,6 +221,18 @@ point(reactor, "SalvagePoint", "SalvageType", "ScrapBin", "ScrapBin", "Scrap Bin
 point(life, "QuickAction", "ActionId", "EmergencyO2", "EmergencyO2", "Emergency O2 Reserve (1 Filter)", "Use", 1.5, Vector3.new(-30, Y + 3, 9), Vector3.new(3, 6, 3), Color3.fromRGB(70, 140, 110))
 point(hub, "QuickAction", "ActionId", "HullPatch", "HullPatchLocker", "Hull Patch Kit (2 Scrap + 1 Sealant)", "Use", 1.5, Vector3.new(7, Y + 2.5, -7.8), Vector3.new(3, 5, 1.5), Color3.fromRGB(150, 110, 60))
 
+-- Day 100 Beacon Fabricator (FinaleStation)
+do
+	local m = Instance.new("Model")
+	m.Name = "BeaconFabricator"
+	local body = part(m, "Body", Vector3.new(4, 3, 3), CFrame.new(38, Y + 1.5, 9), COL.Trim, Enum.Material.Metal)
+	part(m, "Indicator", Vector3.new(3, 0.3, 2), CFrame.new(38, Y + 3.15, 9), Color3.fromRGB(255, 176, 32), Enum.Material.Neon, { CanCollide = false })
+	prompt(body, "Beacon Fabricator (2 Filament + 1 Scrap)", "Build Transmitter", 1.5)
+	m.PrimaryPart = body
+	CS:AddTag(m, "FinaleStation")
+	m.Parent = shop
+end
+
 local spawn = Instance.new("SpawnLocation")
 spawn.Name, spawn.Size, spawn.CFrame = "CrewSpawn", Vector3.new(6, 0.2, 6), CFrame.new(0, Y + 0.1, 2)
 spawn.Anchored, spawn.Neutral, spawn.Duration = true, true, 0

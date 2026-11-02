@@ -5,7 +5,8 @@ local Config = require(ReplicatedStorage.Shared.Config.GameConfig)
 local DayCycle = {}
 DayCycle.__index = DayCycle
 
-local TERMINAL = { Finale = true, Complete = true, Failed = true }
+-- Finale is NOT terminal: the ship keeps simulating (and can still be lost) during the final objective.
+local TERMINAL = { Vote = true, Complete = true, Failed = true }
 
 function DayCycle.new()
 	local self = setmetatable({}, DayCycle)
@@ -67,6 +68,21 @@ end
 function DayCycle:SkipPhase() -- Studio dev only
 	if self.phaseEndsAt > 0 then self.phaseEndsAt = workspace:GetServerTimeNow() end
 end
+
+function DayCycle:EnterVote(seconds: number)
+	self:_enter("Vote", seconds)
+end
+
+function DayCycle:Complete()
+	self:_enter("Complete", nil)
+end
+
+function DayCycle:ContinueEndless()
+	self.day = Config.DayMilestone + 1
+	self:_enter("Prepare", Config.Day.PrepareSeconds)
+end
+
+function DayCycle:IsFinale(): boolean return self.phase == "Finale" end
 
 function DayCycle:Fail()
 	self:_enter("Failed", nil)

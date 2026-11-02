@@ -68,7 +68,11 @@ end
 function ShipHUD:SetPhase(info)
 	self.phaseInfo = info
 	if info.day > 0 then
-		self.dayLabel.Text = ("DAY %03d / %d · %s"):format(info.day, TOTAL_DAYS, string.upper(info.sector))
+		if info.day > TOTAL_DAYS then
+			self.dayLabel.Text = ("DAY %03d · %s"):format(info.day, string.upper(info.sector))
+		else
+			self.dayLabel.Text = ("DAY %03d / %d · %s"):format(info.day, TOTAL_DAYS, string.upper(info.sector))
+		end
 	else
 		self.dayLabel.Text = "DAY --- / 100 · STANDBY"
 	end

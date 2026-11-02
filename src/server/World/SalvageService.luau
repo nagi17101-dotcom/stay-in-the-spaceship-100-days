@@ -56,7 +56,7 @@ function Salvage.Start(run)
 	for _, p in ipairs(CollectionService:GetTagged("SalvagePoint")) do bind(p) end
 
 	run.day.PhaseChanged.Event:Connect(function(info)
-		if info.phase == "Prepare" then refill() end
+		if info.phase == "Prepare" or info.phase == "Finale" then refill() end -- finale restock: no material dead-ends
 	end)
 	refill()
 end
