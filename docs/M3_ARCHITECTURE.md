@@ -15,7 +15,9 @@ Order: **HullSeal → OxygenMixer → CrisisDirector**. Incidents need real repa
 | Id | System | Station | Rules module | Status |
 |---|---|---|---|---|
 | SignalTriangulator (M06) | Comms +35 | Bridge `BR-SignalTriangulator` | `Shared/Minigames/SignalTriangulatorRules` | DONE |
-| ThrusterMatrix (M07) | Drive | Bridge/Engine | — | next |
+| ThrusterMatrix (M07) | Drive +35 | Bridge `BR-ThrusterMatrix` | `Shared/Minigames/ThrusterMatrixRules` | DONE |
+
+**M3 minigame target met: 7 minigames** (M01–M07).
 
 Director: templates may set `sectorWeight = { [sectorName] = multiplier }` (GhostEcho ×3 in Echo Fields).
 

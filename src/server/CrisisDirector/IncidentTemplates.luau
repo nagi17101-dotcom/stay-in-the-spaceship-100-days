@@ -64,6 +64,17 @@ return {
 		escalate = { every = 30, max = 2, text = "Navigation drifting on bad signal data.", effects = { { system = "Navigation", field = "health", amount = -7 } } },
 	},
 	{
+		id = "ThrusterDrift", title = "Thruster alignment drift", severity = "Major", cost = 1, minDay = 3, weight = 2, cooldown = 150,
+		sectorWeight = { ["Outer Freight Belt"] = 2 },
+		alert = "Debris strike knocked the lateral thrusters out of alignment!",
+		effects = { { system = "Drive", field = "health", amount = -25 } },
+		steps = {
+			{ objective = "THRUSTER DRIFT: plot a corrective burn at the Thruster Matrix (Bridge).",
+				paths = { { kind = "task", id = "ThrusterMatrix" } } },
+		},
+		escalate = { every = 30, max = 2, text = "Drift growing — transit slowing.", effects = { { system = "Drive", field = "health", amount = -7 } } },
+	},
+	{
 		id = "HotCore", title = "Hot core chain", severity = "Critical", cost = 2, minDay = 4, weight = 1, cooldown = 300,
 		alert = "HOT CORE: coolant loop blocked and reactor output unstable!",
 		effects = { { system = "Cooling", field = "health", amount = -25 }, { system = "Reactor", field = "health", amount = -15 } },

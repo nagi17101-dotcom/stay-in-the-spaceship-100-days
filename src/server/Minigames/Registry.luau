@@ -7,4 +7,5 @@ return {
 	PowerBus = require(folder.PowerBus),
 	CoolantLoop = require(folder.CoolantLoop),
 	SignalTriangulator = require(folder.SignalTriangulator),
+	ThrusterMatrix = require(folder.ThrusterMatrix),
 }
