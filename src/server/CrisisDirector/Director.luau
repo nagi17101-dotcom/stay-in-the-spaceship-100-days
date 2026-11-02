@@ -12,9 +12,9 @@ local Feasibility = require(script.Parent.Feasibility)
 local Director = {}
 Director.__index = Director
 
-local QUIET_START, QUIET_END = 10, 10   -- no spawns in first/last seconds of Active
-local CHECK_EVERY = 8
-local RECOVERY_WINDOW = 25
+-- Pacing (seconds). A table so Studio QA (Dev/QaSim) can compress it together with the day length.
+Director.Timing = { quietStart = 10, quietEnd = 10, checkEvery = 8, recovery = 25 } -- quiet = no spawns in first/last seconds of Active
+local T = Director.Timing
 local BUDGET_CAP = 4
 
 local function alertAll(severity, text)
@@ -124,7 +124,7 @@ function Director:OnPhase(info)
 	if info.phase == "Active" then
 		self.budget, self.spent = self:ComputeBudget(), 0
 		self.activeEndsAt = info.phaseEndsAt
-		self.nextCheckAt = now + QUIET_START
+		self.nextCheckAt = now + T.quietStart
 	elseif info.phase == "Lobby" or info.phase == "Failed" then
 		self:Reset()
 	else
@@ -133,8 +133,8 @@ function Director:OnPhase(info)
 end
 
 function Director:OnEmergencyEnded()
-	self.recoveryUntil = workspace:GetServerTimeNow() + RECOVERY_WINDOW
-	alertAll("Info", ("RECOVERY WINDOW: no new incidents for %ds."):format(RECOVERY_WINDOW))
+	self.recoveryUntil = workspace:GetServerTimeNow() + T.recovery
+	alertAll("Info", ("RECOVERY WINDOW: no new incidents for %ds."):format(T.recovery))
 end
 
 function Director:Tick(now: number)
@@ -150,8 +150,8 @@ function Director:Tick(now: number)
 	end
 
 	if now < self.nextCheckAt then return end
-	self.nextCheckAt = now + CHECK_EVERY
-	if now < self.recoveryUntil or now > self.activeEndsAt - QUIET_END then return end
+	self.nextCheckAt = now + T.checkEvery
+	if now < self.recoveryUntil or now > self.activeEndsAt - T.quietEnd then return end
 
 	local ctx = self:_context()
 	local candidates, total = {}, 0

@@ -7,6 +7,7 @@ local SignalTriangulator = {}
 SignalTriangulator.Id = "SignalTriangulator"
 SignalTriangulator.System = "Comms"
 SignalTriangulator.RepairAmount = 35
+SignalTriangulator.AlsoRepairs = { Navigation = 35 } -- M06 covers Comms/Navigation (bible): the fix recalibrates nav too
 
 local TIERS = {
 	Basic = { size = 8, band = 0, noise = 0 },

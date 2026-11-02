@@ -122,7 +122,7 @@ Config.Progression = {
 Config.Finale = {
 	HoldSeconds = 20,            -- divided by graceFactor (Cadet shorter, Veteran longer)
 	HoldMinCondition = 40,       -- average ship condition % required while transmitting
-	TransmitterCost = { ConductiveFilament = 2, ScrapAlloy = 1 }, -- guaranteed reachable (filament is never spent elsewhere)
+	TransmitterCost = { ConductiveFilament = 2, ScrapAlloy = 1 }, -- guaranteed: FinaleService:Begin tops up any shortfall
 	VoteSeconds = 30,
 	CompleteReturnSeconds = 15,
 	Xp = 500,

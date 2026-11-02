@@ -58,6 +58,14 @@ function Finale:Begin()
 	self:Reset()
 	self.active = true
 	alertAll("Critical", "DAY 100 — RETURN SIGNAL. Three final stages: route, transit core, beacon.")
+	-- guarantee the transmitter is craftable (Fabricator blueprints can spend filament earlier): top up the shortfall once
+	local items, short = self.run.inventory.items, {}
+	for id, n in pairs(Config.Finale.TransmitterCost) do
+		if (items[id] or 0) < n then short[id] = n - (items[id] or 0) end
+	end
+	if next(short) and self.run.inventory:Credit(short, "finale:kit:" .. self.run.runId) then
+		alertAll("Info", "Return-signal reserve unsealed: +" .. Config.FormatItems(short))
+	end
 	print(("[Finale] begin run=%s difficulty=%s"):format(string.sub(self.run.runId, 1, 8), self.run.difficulty))
 end
 

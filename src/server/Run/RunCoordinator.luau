@@ -20,6 +20,7 @@ local LobbyPartyService = require(Server.LobbyMatchmaking.LobbyPartyService)
 local CrisisDirector = require(Server.CrisisDirector.Director)
 local ProfileService = require(Server.Progression.ProfileService)
 local FinaleService = require(Server.Finale.FinaleService)
+local QaSim = require(Server.Dev.QaSim) -- Studio-only accelerated QA (no-op in live servers)
 
 local N = Remotes.Names
 local RunCoordinator = {}
@@ -396,6 +397,14 @@ function RunCoordinator.Start()
 				return run.director:ForceSpawn(a)
 			elseif cmd == "director" then
 				return run.director:Status() .. " | objective: " .. tostring(run.director:Objective())
+			elseif cmd == "qasim" then -- accelerated full-voyage QA (a = { seed, untilDay, active, startDay })
+				return QaSim.Start(run, a)
+			elseif cmd == "qastatus" then
+				return QaSim.Status()
+			elseif cmd == "qareport" then
+				return QaSim.Report()
+			elseif cmd == "qastop" then
+				return QaSim.Stop()
 			elseif cmd == "day" then -- jump the day counter (tier / minDay tests)
 				run.day.day = a
 			elseif cmd == "skip" then

@@ -66,7 +66,11 @@ local function openTask(player: Player, station: Model)
 	local finaleStep = f and f.active and f:_current()
 	local finaleNeeds = finaleStep and finaleStep.kind == "task" and finaleStep.id == mg.Id
 	local incidentNeeds = run.director ~= nil and run.director:NeedsTask(mg.Id)
-	if sys.health >= REPAIR_THRESHOLD and not finaleNeeds and not incidentNeeds and not mg.AlwaysAvailable then
+	local secondaryNeeds = false
+	for name in pairs(mg.AlsoRepairs or {}) do
+		if run.ship.systems[name].health < REPAIR_THRESHOLD then secondaryNeeds = true end
+	end
+	if sys.health >= REPAIR_THRESHOLD and not secondaryNeeds and not finaleNeeds and not incidentNeeds and not mg.AlwaysAvailable then
 		return notify(player, "Info", mg.System .. " is nominal. No repair needed.")
 	end
 
@@ -128,6 +132,9 @@ local function onSubmit(player: Player, taskId: any, action: any)
 		end
 		if task.mg.RepairAmount > 0 then
 			run.ship:ApplyRepair(task.mg.System, task.mg.RepairAmount, task.taskId) -- exactly-once by txId
+		end
+		for name, amount in pairs(task.mg.AlsoRepairs or {}) do
+			run.ship:ApplyRepair(name, amount, task.taskId .. ":" .. name)
 		end
 		if task.mg.OnSuccess then task.mg.OnSuccess(run, player, task.pub, action, task.taskId) end
 		release(task, "RESOLVED")
