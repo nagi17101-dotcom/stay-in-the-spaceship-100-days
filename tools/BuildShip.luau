@@ -137,7 +137,7 @@ corridor("CorridorAft", 0, 18, 10, 18, false)
 corridor("CorridorWest", -17, 0, 16, 10, true)
 corridor("CorridorEast", 17, 0, 16, 10, true)
 
-local bridge = room("Bridge", "Bridge / Nav", "Navigation,Comms,Drive", 0, -38, 30, 22, { N = "window", S = "door" })
+local bridge = room("Bridge", "Bridge / Nav", "Navigation,Comms,Drive,Shields", 0, -38, 30, 22, { N = "window", S = "door" })
 local life = room("LifeSupport", "Life Support", "Oxygen,Hull", -36, 0, 22, 22, { E = "door" })
 local shop = room("Workshop", "Workshop", "Cargo", 36, 0, 22, 22, { W = "door" })
 local reactor = room("Reactor", "Reactor / Power", "Reactor,Power,Cooling", 0, 40, 30, 26, { N = "door" })
@@ -203,6 +203,7 @@ station(bridge, "BR-SignalTriangulator", "SignalTriangulator", "Comms", "Signal 
 station(bridge, "BR-ThrusterMatrix", "ThrusterMatrix", "Drive", "Thruster Matrix", Vector3.new(13.5, Y + 2, -40), Vector3.new(-1, 0, 0))
 station(shop, "WS-GravityStabilizer", "GravityStabilizer", "Cargo", "Gravity Stabilizer", Vector3.new(28, Y + 2, -9.8), Vector3.new(0, 0, 1))
 station(shop, "WS-DroneSalvage", "DroneSalvage", "Cargo", "Drone Bay", Vector3.new(46.3, Y + 2, 0), Vector3.new(-1, 0, 0))
+station(bridge, "BR-ShieldResonance", "ShieldResonance", "Shields", "Shield Resonance", Vector3.new(10, Y + 2, -47.5), Vector3.new(0, 0, 1))
 
 -- Salvage points + emergency quick actions
 local function point(rm, tag, attr, value, name, objectText, actionText, hold, pos, size, color)

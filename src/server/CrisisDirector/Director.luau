@@ -73,10 +73,25 @@ function Director:_context()
 	}
 end
 
+-- Shields absorb part of incident hull damage: amount × (1 - 0.5 × shield%). Feasibility still uses the
+-- unshielded worst case, so the safety margin never depends on shields being up.
+function Director:ShieldFactor(): number
+	local s = self.run.ship.systems.Shields
+	return math.clamp(math.min(s.health, s.output) / 100, 0, 1)
+end
+
 function Director:_apply(effects, txId)
+	local absorbed = nil
 	for i, e in ipairs(effects) do
-		self.run.ship:ApplyDelta(e.system, e.field, e.amount, txId .. ":" .. i)
+		local amount = e.amount
+		if e.system == "Hull" and amount < 0 then
+			local f = self:ShieldFactor()
+			absorbed = math.floor(50 * f + 0.5)
+			amount = amount * (1 - 0.5 * f)
+		end
+		self.run.ship:ApplyDelta(e.system, e.field, amount, txId .. ":" .. i)
 	end
+	return absorbed
 end
 
 function Director:Spawn(t, now)
@@ -86,8 +101,8 @@ function Director:Spawn(t, now)
 		startedAt = now, nextEscalateAt = now + t.escalate.every * self.run.ship.tuning.graceFactor,
 	}
 	table.insert(self.active, inc)
-	self:_apply(t.effects, "inc:" .. inc.id)
-	alertAll(t.severity == "Critical" and "Critical" or "Warning", t.alert)
+	local absorbed = self:_apply(t.effects, "inc:" .. inc.id)
+	alertAll(t.severity == "Critical" and "Critical" or "Warning", t.alert .. (absorbed and (" Shields absorbed " .. absorbed .. "%.") or ""))
 	print(("[Director] day=%d spawn %s (%s) id=%s budget=%.2f spent=%.2f"):format(self.run.day.day, t.id, t.severity, inc.id, self.budget, self.spent))
 	return inc
 end

@@ -95,6 +95,29 @@ return {
 		},
 		escalate = { every = 35, max = 2, text = "Receiver rails grinding — cargo handling degrading.", effects = { { system = "Cargo", field = "health", amount = -6 } } },
 	},
+
+	{
+		id = "DebrisBarrage", title = "Debris barrage", severity = "Major", cost = 1, minDay = 2, weight = 2, cooldown = 150,
+		sectorWeight = { ["Outer Freight Belt"] = 2 },
+		alert = "Debris barrage! Hull impacts and shield emitters stressed.",
+		effects = { { system = "Hull", field = "health", amount = -15 }, { system = "Shields", field = "health", amount = -15 } },
+		steps = {
+			{ objective = "DEBRIS BARRAGE: re-tune shield harmonics at the Shield Resonance console (Bridge).",
+				paths = { { kind = "task", id = "ShieldResonance" } } },
+		},
+		escalate = { every = 30, max = 2, text = "More impacts — hull taking hits.", effects = { { system = "Hull", field = "health", amount = -6 } } },
+	},
+	{
+		id = "IonSquall", title = "Ion squall", severity = "Major", cost = 1, minDay = 3, weight = 2, cooldown = 150,
+		sectorWeight = { ["Ion Corridor"] = 3 },
+		alert = "Ion squall! Shield resonance mismatched to the storm spectrum.",
+		effects = { { system = "Shields", field = "health", amount = -25 } },
+		steps = {
+			{ objective = "ION SQUALL: match the storm spectrum at the Shield Resonance console (Bridge).",
+				paths = { { kind = "task", id = "ShieldResonance" } } },
+		},
+		escalate = { every = 30, max = 2, text = "Ion surge leaking into the power bus.", effects = { { system = "Power", field = "health", amount = -6 } } },
+	},
 	{
 		id = "HotCore", title = "Hot core chain", severity = "Critical", cost = 2, minDay = 4, weight = 1, cooldown = 300,
 		alert = "HOT CORE: coolant loop blocked and reactor output unstable!",

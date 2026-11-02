@@ -40,3 +40,12 @@ Same contract (shared Rules + server generator/validator + UI + 300-seed self-te
 | DroneSalvage (M09) | resource task (no repair) | Workshop `WS-DroneSalvage` | `Shared/Minigames/DroneSalvageRules` | DONE |
 
 Minigame module optional hooks (TaskService): `AlwaysAvailable` (open without damage), `CanOpen(run) -> ok, why`, `OnSuccess(run, player, pub, action, taskId)` (server-side rewards, keyed by taskId).
+| ShieldResonance (M10) | Shields +35 | Bridge `BR-ShieldResonance` | `Shared/Minigames/ShieldResonanceRules` | DONE |
+
+Shield mechanic: when shield output < `Dependencies.ShieldSafe` (50), the hull takes extra wear up to `ShieldHullWear` (0.15/s) during Active (Power → Shields → Hull chain). The Main Junction room now tracks `Hull,Shields` for lights/signs.
+
+## Shield mechanics (M10, merged)
+- **Incident absorption** (CrisisDirector): Hull damage from incidents × (1 − 0.5 · shield%); alert shows "Shields absorbed X%".
+- **Passive wear** (ShipStateService): below `Dependencies.ShieldSafe` (50) hull loses `deficit · ShieldHullWear(0.15) · wf` per second.
+- **Station**: single console on the Bridge (`BR-ShieldResonance`); Bridge room lighting follows Shields, Junction follows Hull only.
+- **Incidents**: DebrisBarrage (hull + shields) and IonSquall (shields); Feasibility rejects them when they would cripple Shields.

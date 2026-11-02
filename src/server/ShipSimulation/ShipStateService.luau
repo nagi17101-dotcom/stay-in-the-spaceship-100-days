@@ -54,6 +54,9 @@ function ShipStateService:Step(dt: number, wearActive: boolean)
 		-- Cooling deficit overheats the reactor
 		local coolingDeficit = math.max(0, DEP.CoolingSafe - s.Cooling.health) / DEP.CoolingSafe
 		s.Reactor.health = clamp(s.Reactor.health - coolingDeficit * DEP.ReactorHeatWear * wf * dt, 0, 100)
+		-- Weak shields: meteor/ion impacts wear the hull (uses last tick's shield output)
+		local shieldDeficit = math.max(0, DEP.ShieldSafe - s.Shields.output) / DEP.ShieldSafe
+		s.Hull.health = clamp(s.Hull.health - shieldDeficit * DEP.ShieldHullWear * wf * dt, 0, 100)
 	end
 
 	-- Dependency chain: Reactor -> Power -> (Life support, powered systems)

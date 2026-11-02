@@ -46,6 +46,8 @@ Config.Dependencies = {
 	HullLeakRate = 0.8,          -- O2/s leak at hull 0
 	OxygenRegen = 0.6,           -- O2/s at full power + healthy scrubbers
 	OxygenUsePerCrew = 0.05,
+	ShieldSafe = 50,             -- below this shield output, impacts reach the hull
+	ShieldHullWear = 0.15,       -- extra hull wear/s at 0 shields (Active phase)
 }
 
 Config.Thresholds = { Warning = 50, Critical = 25, Hysteresis = 3 }
