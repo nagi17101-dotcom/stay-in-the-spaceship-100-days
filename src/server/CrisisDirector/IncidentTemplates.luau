@@ -75,6 +75,17 @@ return {
 		escalate = { every = 30, max = 2, text = "Drift growing — transit slowing.", effects = { { system = "Drive", field = "health", amount = -7 } } },
 	},
 	{
+		id = "GravityWobble", title = "Gravity stabilizer wobble", severity = "Major", cost = 1, minDay = 3, weight = 2, cooldown = 150,
+		sectorWeight = { ["Dead Relay Zone"] = 2 },
+		alert = "Gravity rings out of balance! Cargo handling unstable.",
+		effects = { { system = "Cargo", field = "health", amount = -25 } },
+		steps = {
+			{ objective = "GRAVITY WOBBLE: rebalance the rings at the Gravity Stabilizer (Workshop).",
+				paths = { { kind = "task", id = "GravityStabilizer" } } },
+		},
+		escalate = { every = 30, max = 2, text = "Wobble growing — cargo racks shifting.", effects = { { system = "Cargo", field = "health", amount = -7 } } },
+	},
+	{
 		id = "HotCore", title = "Hot core chain", severity = "Critical", cost = 2, minDay = 4, weight = 1, cooldown = 300,
 		alert = "HOT CORE: coolant loop blocked and reactor output unstable!",
 		effects = { { system = "Cooling", field = "health", amount = -25 }, { system = "Reactor", field = "health", amount = -15 } },

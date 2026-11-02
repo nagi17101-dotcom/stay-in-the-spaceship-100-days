@@ -32,4 +32,5 @@ Evidence = Studio playtest unless noted. "Single-player" = Studio solo override;
 | M4-01 | Day 100 finale: 3 stages (SignalTriangulator → ReactorPhase+PowerBus → Beacon Fabricator + hold), finale restock, task threshold bypass | DONE (solo) | stage 1 via real Advanced task with healthy Comms; craft via real prompt (2 Filament + 1 Scrap debited); hold counter 0→19 live on HUD |
 | M4-02 | Crew vote Extract/Continue (tie/timeout → Extract), +500 XP + Day-100 achievement for all aboard | DONE (solo) | timeout → Extract; Continue → Day 101; Extract → VOYAGE COMPLETE → lobby after 15s |
 | M4-03 | Endless Voyage (Day 101+, HUD without /100, milestones 125/150/200) | DONE (solo) | Day 101 · ENDLESS VOYAGE shown; endless loss → Ship Lost → lobby |
-| M4-04 | Minigames M08–M12 (GravityStabilizer, DroneSalvage, ShieldResonance, FabricatorAssembly, ContainmentDiagnosis) | NOT STARTED | — |
+| M4-04 | Minigame GravityStabilizer (M08) Basic/Advanced + Workshop station; Director GravityWobble (Dead Relay Zone ×2) | DONE | 300 seeds/tier solvable, idle never solves, partial+damping solves 19%/6% (real trade-off); in play: idle rejected (Unstable), 2 shifts + damping 2 accepted, GravityWobble resolved |
+| M4-05 | Minigames M09–M12 (DroneSalvage, ShieldResonance, FabricatorAssembly, ContainmentDiagnosis) | NOT STARTED | — |

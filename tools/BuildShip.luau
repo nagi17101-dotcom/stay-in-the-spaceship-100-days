@@ -201,6 +201,7 @@ station(life, "LS-OxygenMixer", "OxygenMixer", "Oxygen", "Oxygen Mixer", Vector3
 station(reactor, "RX-ReactorPhase", "ReactorPhase", "Reactor", "Reactor Phase", Vector3.new(8, Y + 2, 51.8), Vector3.new(0, 0, -1))
 station(bridge, "BR-SignalTriangulator", "SignalTriangulator", "Comms", "Signal Triangulator", Vector3.new(-13.5, Y + 2, -40), Vector3.new(1, 0, 0))
 station(bridge, "BR-ThrusterMatrix", "ThrusterMatrix", "Drive", "Thruster Matrix", Vector3.new(13.5, Y + 2, -40), Vector3.new(-1, 0, 0))
+station(shop, "WS-GravityStabilizer", "GravityStabilizer", "Cargo", "Gravity Stabilizer", Vector3.new(28, Y + 2, -9.8), Vector3.new(0, 0, 1))
 
 -- Salvage points + emergency quick actions
 local function point(rm, tag, attr, value, name, objectText, actionText, hold, pos, size, color)

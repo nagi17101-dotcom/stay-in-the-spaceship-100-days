@@ -13,10 +13,11 @@ local UIS = {
 	ReactorPhase = require(script.Parent.ReactorPhaseUI),
 	SignalTriangulator = require(script.Parent.SignalTriangulatorUI),
 	ThrusterMatrix = require(script.Parent.ThrusterMatrixUI),
+	GravityStabilizer = require(script.Parent.GravityStabilizerUI),
 	PowerBus = require(script.Parent.PowerBusUI),
 	CoolantLoop = require(script.Parent.CoolantLoopUI),
 }
-local TITLES = { HullSeal = "HULL SEAL PLANNER", OxygenMixer = "OXYGEN COMPOSITION MIXER", ReactorPhase = "REACTOR PHASE EQUALIZER", SignalTriangulator = "SIGNAL TRIANGULATOR", ThrusterMatrix = "THRUSTER ALIGNMENT MATRIX", PowerBus = "POWER BUS ALLOCATOR", CoolantLoop = "COOLANT LOOP" }
+local TITLES = { HullSeal = "HULL SEAL PLANNER", OxygenMixer = "OXYGEN COMPOSITION MIXER", ReactorPhase = "REACTOR PHASE EQUALIZER", SignalTriangulator = "SIGNAL TRIANGULATOR", ThrusterMatrix = "THRUSTER ALIGNMENT MATRIX", GravityStabilizer = "GRAVITY STABILIZER", PowerBus = "POWER BUS ALLOCATOR", CoolantLoop = "COOLANT LOOP" }
 
 local TaskController = {}
 local current

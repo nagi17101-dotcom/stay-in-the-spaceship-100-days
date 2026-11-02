@@ -8,4 +8,5 @@ return {
 	CoolantLoop = require(folder.CoolantLoop),
 	SignalTriangulator = require(folder.SignalTriangulator),
 	ThrusterMatrix = require(folder.ThrusterMatrix),
+	GravityStabilizer = require(folder.GravityStabilizer),
 }

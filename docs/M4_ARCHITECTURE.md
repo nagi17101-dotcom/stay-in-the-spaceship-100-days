@@ -33,3 +33,7 @@ RunCoordinator sends `ShipStateDelta` when systems change **or** the objective t
 
 ## Next: minigames M08–M12
 Same contract (shared Rules + server generator/validator + UI + 300-seed self-test + station) and one Director template each.
+
+| Id | System | Station | Rules module | Status |
+|---|---|---|---|---|
+| GravityStabilizer (M08) | Cargo +35 | Workshop `WS-GravityStabilizer` | `Shared/Minigames/GravityStabilizerRules` | DONE |
