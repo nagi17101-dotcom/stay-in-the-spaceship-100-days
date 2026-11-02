@@ -9,10 +9,11 @@ local N = Remotes.Names
 
 local UIS = {
 	HullSeal = require(script.Parent.HullSealUI),
+	OxygenMixer = require(script.Parent.OxygenMixerUI),
 	PowerBus = require(script.Parent.PowerBusUI),
 	CoolantLoop = require(script.Parent.CoolantLoopUI),
 }
-local TITLES = { HullSeal = "HULL SEAL PLANNER", PowerBus = "POWER BUS ALLOCATOR", CoolantLoop = "COOLANT LOOP" }
+local TITLES = { HullSeal = "HULL SEAL PLANNER", OxygenMixer = "OXYGEN COMPOSITION MIXER", PowerBus = "POWER BUS ALLOCATOR", CoolantLoop = "COOLANT LOOP" }
 
 local TaskController = {}
 local current
