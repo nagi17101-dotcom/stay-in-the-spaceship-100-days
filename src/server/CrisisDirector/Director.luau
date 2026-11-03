@@ -13,7 +13,7 @@ local Director = {}
 Director.__index = Director
 
 -- Pacing (seconds). A table so Studio QA (Dev/QaSim) can compress it together with the day length.
-Director.Timing = { quietStart = 10, quietEnd = 10, checkEvery = 8, recovery = 25 } -- quiet = no spawns in first/last seconds of Active
+Director.Timing = { quietStart = 10, quietEnd = 10, checkEvery = 8, recovery = 25, scale = 1 } -- quiet = no spawns in first/last seconds of Active
 local T = Director.Timing
 local BUDGET_CAP = 4
 
@@ -53,7 +53,8 @@ function Director:ComputeBudget(): number
 	for _, sys in pairs(run.ship.systems) do sum += math.min(sys.health, sys.output) n += 1 end
 	local avg = sum / n
 	local relief = avg < 50 and 0.5 or (avg < 70 and 0.75 or 1) -- hurt ship => fewer incidents
-	return math.min(BUDGET_CAP, base * run.ship.tuning.incidentBudgetFactor * team * relief)
+	-- cap the day curve first, then apply difficulty/team: Veteran and bigger crews stay harder after the curve tops out
+	return base * run.ship.tuning.incidentBudgetFactor * team * relief
 end
 
 function Director:_context()
@@ -98,7 +99,7 @@ function Director:Spawn(t, now)
 	local inc = {
 		id = string.sub(HttpService:GenerateGUID(false), 1, 8),
 		template = t, step = 1, escalations = 0,
-		startedAt = now, nextEscalateAt = now + t.escalate.every * self.run.ship.tuning.graceFactor,
+		startedAt = now, nextEscalateAt = now + t.escalate.every * self.run.ship.tuning.graceFactor / T.scale,
 	}
 	table.insert(self.active, inc)
 	local absorbed = self:_apply(t.effects, "inc:" .. inc.id)
@@ -143,7 +144,7 @@ function Director:Tick(now: number)
 		local esc = inc.template.escalate
 		if not inc.halted and now >= inc.nextEscalateAt and inc.escalations < esc.max then
 			inc.escalations += 1
-			inc.nextEscalateAt = now + esc.every * self.run.ship.tuning.graceFactor
+			inc.nextEscalateAt = now + esc.every * self.run.ship.tuning.graceFactor / T.scale
 			self:_apply(esc.effects, ("inc:%s:esc%d"):format(inc.id, inc.escalations))
 			alertAll("Warning", ("%s (%d/%d)"):format(esc.text, inc.escalations, esc.max))
 		end
@@ -173,7 +174,7 @@ function Director:Tick(now: number)
 		roll -= c.w
 		if roll <= 0 then
 			self.spent += t.cost
-			self.cooldownUntil[t.id] = now + t.cooldown
+			self.cooldownUntil[t.id] = now + t.cooldown / T.scale
 			self:Spawn(t, now)
 			return
 		end

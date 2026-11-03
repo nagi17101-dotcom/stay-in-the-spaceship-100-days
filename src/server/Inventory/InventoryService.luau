@@ -38,14 +38,24 @@ function Inventory:TryDebit(cost, txId: string): boolean
 	return true
 end
 
-function Inventory:Credit(items, txId: string): boolean
-	if self.applied[txId] then return false end
+-- Returns applied, overflow (materials discarded because the cargo hold is at Config.MaterialCap)
+function Inventory:Credit(items, txId: string): (boolean, {[string]: number}?)
+	if self.applied[txId] then return false, nil end
 	self.applied[txId] = true
+	local overflow = nil
 	for id, n in pairs(items) do
-		if self.items[id] ~= nil and n > 0 then self.items[id] += n end
+		if self.items[id] ~= nil and n > 0 then
+			local cap = Config.MaterialCap and Config.MaterialCap[id] or math.huge
+			local add = math.max(0, math.min(n, cap - self.items[id]))
+			self.items[id] += add
+			if add < n then
+				overflow = overflow or {}
+				overflow[id] = n - add
+			end
+		end
 	end
 	self.Changed:Fire(self:Snapshot())
-	return true
+	return true, overflow
 end
 
 function Inventory:Snapshot()

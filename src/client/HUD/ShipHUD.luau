@@ -1,5 +1,6 @@
 -- ShipHUD: minimal always-on bar (DAY, progress, Hull/O2/Power, objective) + severity alert stack.
 local TweenService = game:GetService("TweenService")
+local Config = require(game:GetService("ReplicatedStorage").Shared.Config.GameConfig)
 local Theme = require(script.Parent.Theme)
 local C = require(script.Parent.Components)
 
@@ -51,8 +52,8 @@ function ShipHUD.new(playerGui: PlayerGui)
 	self.phaseInfo = nil
 
 	-- Crew inventory (bottom-left)
-	local inv = C.panel({ Name = "Inventory", AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(0, 12, 1, -12), Size = UDim2.new(0, 360, 0, 30), Parent = self.gui })
-	C.make("UISizeConstraint", { MaxSize = Vector2.new(360, 30), Parent = inv })
+	local inv = C.panel({ Name = "Inventory", AnchorPoint = Vector2.new(0, 1), Position = UDim2.new(0, 12, 1, -12), Size = UDim2.new(1, -24, 0, 30), Parent = self.gui })
+	C.make("UISizeConstraint", { MaxSize = Vector2.new(480, 30), Parent = inv })
 	self.inventoryLabel = C.label({ Position = UDim2.fromOffset(10, 0), Size = UDim2.new(1, -20, 1, 0), TextSize = 12, RichText = true, TextXAlignment = Enum.TextXAlignment.Left, TextTruncate = Enum.TextTruncate.AtEnd, Text = "", Parent = inv })
 
 	-- Emergency banner (under top bar)
@@ -118,9 +119,13 @@ end
 function ShipHUD:SetInventory(items, materials)
 	local parts = {}
 	for _, m in ipairs(materials) do
-		table.insert(parts, ('<font color="#8A96A6">%s</font> <b>%d</b>'):format(m.short, items[m.id] or 0))
+		local cap = Config.MaterialCap and Config.MaterialCap[m.id]
+		local n = items[m.id] or 0
+		local num = cap and ('<b>%d</b><font color="#8A96A6">/%d</font>'):format(n, cap) or ('<b>%d</b>'):format(n)
+		if cap and n >= cap then num = ('<font color="#FFB020"><b>%d</b>/%d</font>'):format(n, cap) end
+		table.insert(parts, ('<font color="#8A96A6">%s</font> %s'):format(m.short, num))
 	end
-	self.inventoryLabel.Text = table.concat(parts, "   ")
+	self.inventoryLabel.Text = table.concat(parts, "  ")
 end
 
 function ShipHUD:SetEmergency(e)

@@ -44,6 +44,7 @@ function ShipStateService:_nextMode(sys, value)
 end
 
 function ShipStateService:Step(dt: number, wearActive: boolean)
+	dt *= (self.timeScale or 1) -- Studio QA time compression (Dev/QaSim); nil in real play
 	local s = self.systems
 	local wf = self.tuning.wearFactor
 

@@ -42,9 +42,11 @@ function Salvage.Start(run)
 			local n = run.rng:NextInteger(entry.min, entry.max)
 			if n > 0 then loot[entry.id] = (loot[entry.id] or 0) + n end
 		end
-		run.inventory:Credit(loot, "salvage:" .. HttpService:GenerateGUID(false))
+		local _, overflow = run.inventory:Credit(loot, "salvage:" .. HttpService:GenerateGUID(false))
 		run.recordStat(player, "salvage", 1)
-		Remotes.Get(Remotes.Names.Alert):FireClient(player, { severity = "Info", text = "Salvaged: +" .. Config.FormatItems(loot) })
+		local text = "Salvaged: +" .. Config.FormatItems(loot)
+		if overflow then text ..= " (hold full — discarded " .. Config.FormatItems(overflow) .. ")" end
+		Remotes.Get(Remotes.Names.Alert):FireClient(player, { severity = "Info", text = text })
 	end
 
 	local function bind(point)

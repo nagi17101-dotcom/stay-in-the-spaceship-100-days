@@ -19,7 +19,7 @@ Config.DefaultDifficulty = "Standard"
 Config.Difficulty = {
 	Cadet    = { incidentBudgetFactor = 0.7,  startingResourcesFactor = 1.35, wearFactor = 0.7,  graceFactor = 1.35, maxConcurrentCritical = 1 },
 	Standard = { incidentBudgetFactor = 1.0,  startingResourcesFactor = 1.0,  wearFactor = 1.0,  graceFactor = 1.0,  maxConcurrentCritical = 2 },
-	Veteran  = { incidentBudgetFactor = 1.25, startingResourcesFactor = 0.9,  wearFactor = 1.15, graceFactor = 0.85, maxConcurrentCritical = 2 },
+	Veteran  = { incidentBudgetFactor = 1.25, startingResourcesFactor = 0.9,  wearFactor = 1.3,  graceFactor = 0.85, maxConcurrentCritical = 2 },
 }
 
 Config.Systems = { "Hull", "Oxygen", "Reactor", "Power", "Cooling", "Drive", "Navigation", "Comms", "Shields", "Cargo" }
@@ -61,10 +61,18 @@ Config.Materials = {
 	{ id = "CoolantCartridge", name = "Coolant Cartridge", short = "COOLANT" },
 }
 Config.StartingMaterials = { ScrapAlloy = 3, SealantFoam = 1, FilterMembrane = 1, ConductiveFilament = 2, CoolantCartridge = 1 }
+-- M5 economy: cargo hold limit per material (salvage beyond it is discarded) — keeps materials a decision, not a hoard
+Config.MaterialCap = { ScrapAlloy = 10, SealantFoam = 5, FilterMembrane = 5, ConductiveFilament = 6, CoolantCartridge = 5 }
+-- Day-end consumables (UpkeepService): paid at Transition when day % every == 0; unpaid => one-off system penalty
+Config.Upkeep = {
+	{ id = "ScrapAlloy", amount = 1, every = 1, fromDay = 3, system = "Hull", penalty = 6, label = "hull micro-patching" },
+	{ id = "FilterMembrane", amount = 1, every = 2, fromDay = 3, system = "Oxygen", penalty = 12, label = "scrubber filter swap" },
+	{ id = "CoolantCartridge", amount = 1, every = 3, fromDay = 3, system = "Cooling", penalty = 10, label = "coolant top-up" },
+}
 
 -- Salvage points: finite charges, refilled at each Prepare phase
 Config.SalvageLoot = {
-	DebrisReceiver = { charges = 2, loot = { { id = "ScrapAlloy", min = 1, max = 2 }, { id = "SealantFoam", min = 0, max = 1 } } },
+	DebrisReceiver = { charges = 1, loot = { { id = "ScrapAlloy", min = 1, max = 2 }, { id = "SealantFoam", min = 0, max = 1 } } },
 	SupplyLocker = { charges = 1, loot = { { id = "FilterMembrane", min = 1, max = 1 }, { id = "ConductiveFilament", min = 0, max = 1 } } },
 	ScrapBin = { charges = 1, loot = { { id = "ScrapAlloy", min = 1, max = 1 }, { id = "CoolantCartridge", min = 0, max = 1 } } },
 }
@@ -89,7 +97,7 @@ Config.Fabricator = {
 
 Config.Rewards = {
 	BaseXP = 10, TaskXP = 15, SalvageXP = 5, ActionXP = 5,
-	CrewBonus = { ScrapAlloy = 1 },
+	CrewBonus = {},
 	HealthyBonus = { SealantFoam = 1 },
 	HealthyThreshold = 50,
 }
